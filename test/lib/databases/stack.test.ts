@@ -1,6 +1,6 @@
 import { App } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { GuggianaStack } from '../lib/guggiana-stack';
+import { GuggianaStack } from '../../../lib/guggiana-stack';
 
 test('Databases created', () => {
   const app = new App();

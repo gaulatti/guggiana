@@ -1,4 +1,4 @@
-import { checkLanguagesPresent, delay, excapeSSMLCharacters, lambdaHttpOutput, sanitizeGetInputs } from './index';
+import { delay, excapeSSMLCharacters, extractPathWithTrailingSlash, lambdaHttpOutput, sanitizeGetInputs } from '../../../src/utils';
 
 describe('excapeSSMLCharacters', () => {
   it('should escape SSML characters', () => {
@@ -54,7 +54,7 @@ describe('excapeSSMLCharacters', () => {
   });
 
   it('should escape single quotes', () => {
-    const input = 'Hello \'world\'';
+    const input = "Hello 'world'";
     const expectedOutput = 'Hello &apos;world&apos;';
     const result = excapeSSMLCharacters(input);
     expect(result).toEqual(expectedOutput);
@@ -178,5 +178,33 @@ describe('lambdaHttpOutput', () => {
     };
     const result = lambdaHttpOutput(statusCode);
     expect(result).toEqual(expectedOutput);
+  });
+});
+
+describe('extractPathWithTrailingSlash', () => {
+  it('should return the extracted path with a trailing slash', () => {
+    const url = 'https://www.cnn.com/path/to/resource/';
+    const expectedPath = '/path/to/resource/';
+
+    const result = extractPathWithTrailingSlash(url);
+    expect(result).toEqual(expectedPath);
+  });
+
+  it('should return null if the URL does not match the expected format', () => {
+    const url = 'https://www.cnn.com';
+    const result = extractPathWithTrailingSlash(url);
+    expect(result).toBeNull();
+  });
+
+  it('should return null if the URL does not have a path', () => {
+    const url = 'https://www.cnn.com/';
+    const result = extractPathWithTrailingSlash(url);
+    expect(result).toBeNull();
+  });
+
+  it('should return null if the URL is empty', () => {
+    const url = '';
+    const result = extractPathWithTrailingSlash(url);
+    expect(result).toBeNull();
   });
 });
