@@ -1,17 +1,19 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as Guggiana from '../lib/guggiana-stack';
+import { App } from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
+import { GuggianaStack } from '../lib/guggiana-stack';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/guggiana-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new Guggiana.GuggianaStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+test('Databases created', () => {
+  const app = new App();
+  const stack = new GuggianaStack(app, 'MyTestStack');
+  const template = Template.fromStack(stack);
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+  template.hasResourceProperties('AWS::DynamoDB::Table', {
+    TableName: `${stack.stackName}Content`,
+    BillingMode: 'PAY_PER_REQUEST',
+  });
+
+  template.hasResourceProperties('AWS::DynamoDB::Table', {
+    TableName: `${stack.stackName}Tasks`,
+    BillingMode: 'PAY_PER_REQUEST',
+  });
 });
