@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.140.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "cheerio": "^1.0.0-rc.12",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
