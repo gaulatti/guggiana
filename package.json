@@ -29,7 +29,7 @@
     "typescript": "~5.4.5"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.140.0",
+    "aws-cdk-lib": "2.177.0",
     "axios": "^1.7.4",
     "cheerio": "^1.0.0-rc.12",
     "constructs": "^10.0.0",
