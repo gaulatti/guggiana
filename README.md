@@ -1,4 +1,6 @@
 ## 📝 Introduction
+[![codecov](https://codecov.io/gh/gaulatti/guggiana/graph/badge.svg)](https://codecov.io/gh/gaulatti/guggiana)
+
 The **Guggiana Project** is an advanced AWS-based serverless application designed to handle content-to-speech workflows. It integrates various AWS services such as Step Functions, Polly, S3, and DynamoDB to process, translate, and convert text content into audio in multiple languages. The application is built using **TypeScript** and leverages the **AWS CDK (Cloud Development Kit)** for infrastructure as code.
 
 This project is particularly useful for applications requiring multilingual text-to-speech capabilities, such as news platforms, accessibility tools, or content distribution systems.
@@ -69,6 +71,13 @@ Run unit tests to ensure the application is working as expected:
 ```bash
 npm test
 ```
+
+Run full test coverage with thresholds:
+```bash
+npm run test:coverage
+```
+
+For private repositories, configure `CODECOV_TOKEN` in GitHub repository secrets if your Codecov setup requires it.
 
 ---
 
