@@ -21,7 +21,7 @@
     "@aws-sdk/util-format-url": "^3.567.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.1",
-    "aws-cdk": "^2.178.1",
+    "aws-cdk": "^2.178.2",
     "esbuild": "^0.25.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
