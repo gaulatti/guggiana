@@ -1,3 +1,5 @@
+export {};
+
 const sendMock = jest.fn();
 const updateStatusMock = jest.fn();
 const listMock = jest.fn();

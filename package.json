@@ -1,5 +1,5 @@
 {
-  "name": "guggiana",
+  "name": "@gaulatti/guggiana",
   "version": "0.1.0",
   "bin": {
     "guggiana": "bin/guggiana.js"

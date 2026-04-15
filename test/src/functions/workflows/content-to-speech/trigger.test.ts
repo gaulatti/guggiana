@@ -1,3 +1,5 @@
+export {};
+
 const sendMock = jest.fn();
 const updateTitleMock = jest.fn();
 const axiosGetMock = jest.fn();

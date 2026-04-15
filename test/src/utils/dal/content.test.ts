@@ -1,3 +1,5 @@
+export {};
+
 const sendMock = jest.fn();
 const unmarshallMock = jest.fn<any, [any]>((item) => ({ parsed: item }));
 
