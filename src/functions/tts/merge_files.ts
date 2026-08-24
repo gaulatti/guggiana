@@ -14,6 +14,12 @@ import { createReadStream, createWriteStream, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { Readable } from 'stream';
 import { ContentStatus, getContentTableInstance } from '../../utils/dal/content';
+import {
+  instrumentHandler,
+  observeDependency,
+  recordRetry,
+  recordWorkflowOutcome,
+} from '../../utils/metrics';
 
 const stepFunctionsClient = new SFNClient({});
 const db = getContentTableInstance(process.env.TABLE_NAME!);
@@ -65,7 +71,12 @@ function exec(command: string): { stdout: string; stderr: string } {
  */
 async function fetchFromS3(bucket: string, key: string): Promise<Readable> {
   const getObjectRequest = new GetObjectCommand({ Bucket: bucket, Key: key });
-  const response: GetObjectCommandOutput = await client.send(getObjectRequest);
+  const response: GetObjectCommandOutput = await observeDependency(
+    'merge_files',
+    's3',
+    'get',
+    () => client.send(getObjectRequest)
+  );
 
   if (!response.Body) throw new Error('Failed to retrieve object body.');
 
@@ -127,7 +138,7 @@ async function uploadFileToS3(bucket: string, key: string, filePath: string) {
   };
 
   const command = new PutObjectCommand(input);
-  await client.send(command);
+  await observeDependency('merge_files', 's3', 'put', () => client.send(command));
 }
 
 /**
@@ -138,7 +149,7 @@ async function uploadFileToS3(bucket: string, key: string, filePath: string) {
  * @param callback - The callback function to be called after the merging process is complete.
  * @returns The event object.
  */
-const main = async (event: any, _context: any, callback: any) => {
+const handler = async (event: any, _context: any, callback: any) => {
   const { title, text = [], uuid, language, token } = event;
   console.log(JSON.stringify(event));
 
@@ -151,29 +162,44 @@ const main = async (event: any, _context: any, callback: any) => {
 
     await concatenateAudioFiles(inputFiles, tmpOutputFile);
     await uploadFileToS3(process.env.BUCKET_NAME!, outputFile, tmpOutputFile);
-    const article = await db.get(uuid);
+    const article = await observeDependency('merge_files', 'dynamodb', 'get', () =>
+      db.get(uuid)
+    );
     const outputs = article?.outputs || {};
     outputs[language] = { url: `${BUCKET_URL}${outputFile}` };
 
-    await db.updateRendered(uuid, outputs);
+    await observeDependency('merge_files', 'dynamodb', 'update', () =>
+      db.updateRendered(uuid, outputs)
+    );
     const input = {
       taskToken: token,
       output: JSON.stringify({ uuid, outputs }),
     };
     const command = new SendTaskSuccessCommand(input);
-    const response = await stepFunctionsClient.send(command);
+    await observeDependency('merge_files', 'step_functions', 'send_task', () =>
+      stepFunctionsClient.send(command)
+    );
+    recordWorkflowOutcome('merge_files', 'success');
   } catch (error) {
-    await db.updateStatus(uuid, ContentStatus.FAILED);
+    recordRetry('merge_files', 'workflow_task', 'failure');
+    await observeDependency('merge_files', 'dynamodb', 'update', () =>
+      db.updateStatus(uuid, ContentStatus.FAILED)
+    );
     const input = {
       taskToken: token,
       output: JSON.stringify({ uuid }),
     };
     const command = new SendTaskFailureCommand(input);
-    const response = await stepFunctionsClient.send(command);
+    await observeDependency('merge_files', 'step_functions', 'send_task', () =>
+      stepFunctionsClient.send(command)
+    );
+    recordWorkflowOutcome('merge_files', 'failure');
   }
 
   callback(null, event);
   return event;
 };
+
+const main = instrumentHandler('merge_files', handler);
 
 export { main };

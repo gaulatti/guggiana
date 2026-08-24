@@ -96,6 +96,24 @@ STATE_MACHINE_ARN="your_state_machine_arn"
 
 ---
 
+## 📈 Observability
+
+Each application Lambda writes AWS Embedded Metric Format (EMF) events to its
+private CloudWatch Logs stream under the `Gaulatti/Guggiana` namespace. There is
+no public metrics endpoint. The custom metrics cover bounded workflow stages,
+dependency calls, retries, batch and backlog sizes, outcomes, and build identity.
+Their dimensions are restricted to controlled values such as service, stage,
+version, result, dependency, and operation; content, document IDs, object keys,
+URLs, languages, and error messages are never dimensions or log fields.
+
+AWS/Lambda remains the source for platform metrics such as runtime duration,
+errors, throttles, and concurrency. The central `gaulatti/prometheus` deployment
+must collect the Guggiana namespace through read-only CloudWatch permissions and
+export it to Prometheus; dashboards and alerts belong to that central deployment.
+See the public wiki's **Observability** page for the metric contract and checks.
+
+---
+
 ## 🤝 Contributing
 Contributions are welcome! To contribute:
 1. Fork the repository.

@@ -30,5 +30,18 @@ export class GuggianaStack extends cdk.Stack {
 
     const triggerLambda = buildTriggerLambda(this, contentTable, workflow);
     const getLambda = buildGetLambda(this, contentTable, bucket);
+
+    const buildVersion = require('../package.json').version;
+    [
+      preTranslateLambda,
+      prePollyLambda,
+      pollyListenerLambda,
+      pollyWaitLambda,
+      mergeFilesLambda,
+      triggerLambda,
+      getLambda,
+    ].forEach((lambdaFunction) =>
+      lambdaFunction.addEnvironment('GUGGIANA_BUILD_VERSION', buildVersion)
+    );
   }
 }

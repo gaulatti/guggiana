@@ -1,4 +1,6 @@
 const getMock = jest.fn();
+
+export {};
 const queryByUrlMock = jest.fn();
 const createMock = jest.fn();
 const checkLanguagesPresentMock = jest.fn();
