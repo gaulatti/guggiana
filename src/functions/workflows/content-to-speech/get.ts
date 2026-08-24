@@ -5,6 +5,12 @@ import { formatUrl } from '@aws-sdk/util-format-url';
 import { randomUUID } from 'crypto';
 import { checkLanguagesPresent, delay, extractPathWithTrailingSlash } from '../../../utils';
 import { getContentTableInstance } from '../../../utils/dal/content';
+import {
+  instrumentHandler,
+  observeDependency,
+  recordRetry,
+  recordWorkflowOutcome,
+} from '../../../utils/metrics';
 
 const db = getContentTableInstance(process.env.TABLE_NAME!);
 const client = new S3Client();
@@ -34,13 +40,17 @@ function parseS3Url(url: string) {
  * @param _context - The context object.
  * @param callback - The callback function to be called with the result.
  */
-const main = async (event: any, _context: any, callback: any) => {
+const handler = async (event: any, _context: any, callback: any) => {
   const { contentId, href, language } = event.args.input;
   if (!contentId && !href) throw new Error('Missing contentId or url');
-  let existingItem, url, uuid;
+  let existingItem: any;
+  let url: string | null | undefined;
+  let uuid: string | undefined;
 
   if (contentId) {
-    existingItem = await db.get(contentId);
+    existingItem = await observeDependency('get', 'dynamodb', 'get', () =>
+      db.get(contentId)
+    );
   }
 
   if (href) {
@@ -51,7 +61,9 @@ const main = async (event: any, _context: any, callback: any) => {
    * If existingItem can't be found by UUID, try to find it by URL
    */
   if (!existingItem) {
-    existingItem = await db.queryByUrl(url);
+    existingItem = await observeDependency('get', 'dynamodb', 'query', () =>
+      db.queryByUrl(url)
+    );
   }
 
   /**
@@ -62,10 +74,17 @@ const main = async (event: any, _context: any, callback: any) => {
      * If there's no URL, return 404. We need the URL to crawl the page
      */
     if (!url) throw new Error('404');
-    const createResponse = await db.create(randomUUID(), url);
+    const createResponse = await observeDependency(
+      'get',
+      'dynamodb',
+      'create',
+      () => db.create(randomUUID(), url)
+    );
     uuid = createResponse.uuid;
     console.log(`Created record for ${url}`);
-    existingItem = await db.get(uuid);
+    existingItem = await observeDependency('get', 'dynamodb', 'get', () =>
+      db.get(uuid)
+    );
   } else {
     uuid = existingItem.uuid;
   }
@@ -77,8 +96,11 @@ const main = async (event: any, _context: any, callback: any) => {
    * Otherwise, we wait until all languages are generated.
    */
   while (!checkLanguagesPresent(existingItem, language)) {
+    recordRetry('get', 'content_poll', 'waiting');
     await delay(1000);
-    existingItem = await db.get(uuid);
+    existingItem = await observeDependency('get', 'dynamodb', 'get', () =>
+      db.get(uuid)
+    );
   }
   if (existingItem) {
     const keys = Object.keys(existingItem['outputs']);
@@ -94,7 +116,13 @@ const main = async (event: any, _context: any, callback: any) => {
 
         const request = await createRequest<any, GetObjectCommandInput, GetObjectCommandOutput>(new S3Client({}), command);
 
-        const signedUrl = formatUrl(await presigner.presign(request, { expiresIn: 3600 }));
+        const signedRequest = await observeDependency(
+          'get',
+          's3',
+          'presign',
+          () => presigner.presign(request, { expiresIn: 3600 })
+        );
+        const signedUrl = formatUrl(signedRequest);
 
         output.push({ code: key, url: signedUrl });
       })
@@ -102,7 +130,10 @@ const main = async (event: any, _context: any, callback: any) => {
     existingItem['outputs'] = output;
   }
 
+  recordWorkflowOutcome('get', 'success');
   callback(null, existingItem);
 };
+
+const main = instrumentHandler('get', handler);
 
 export { main };

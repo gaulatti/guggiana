@@ -1,4 +1,5 @@
 import { delay, excapeSSMLCharacters } from '../../utils';
+import { instrumentHandler } from '../../utils/metrics';
 
 /**
  * Prepares the title and byline for text-to-speech synthesis.
@@ -54,7 +55,7 @@ const groupParagraphs = (text: string, maxCharacterLimit: number) => {
  * @param _callback - The callback function to be invoked after execution.
  * @returns The converted text-to-speech data.
  */
-const main = async (event: any, _context: any, _callback: any) => {
+const handler = async (event: any, _context: any, _callback: any) => {
   const { uuid, url, language, text, title, byline } = event;
 
   const preparedTitle = prepareTitle(title, byline);
@@ -79,5 +80,6 @@ const main = async (event: any, _context: any, _callback: any) => {
   };
 };
 
-export { groupParagraphs, main, prepareTitle };
+const main = instrumentHandler('pre_polly', handler);
 
+export { groupParagraphs, main, prepareTitle };

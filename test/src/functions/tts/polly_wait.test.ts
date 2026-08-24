@@ -1,5 +1,7 @@
 const createMock = jest.fn();
 
+export {};
+
 jest.mock('../../../../src/utils/dal/tasks', () => ({
   getTasksTableInstance: jest.fn(() => ({ create: createMock })),
 }));

@@ -3,6 +3,12 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import { pollyLanguages } from '../../../utils/consts/languages';
 import { getContentTableInstance } from '../../../utils/dal/content';
+import {
+  instrumentHandler,
+  observeDependency,
+  recordWorkflowBatch,
+  recordWorkflowOutcome,
+} from '../../../utils/metrics';
 
 const db = getContentTableInstance(process.env.TABLE_NAME!);
 const client = new SFNClient();
@@ -16,7 +22,9 @@ const fetchAndParseArticle = async (url: string) => {
   /**
    * Fetch the article content.
    */
-  const response = await axios.get(`https://lite.cnn.com${url}`);
+  const response = await observeDependency('trigger', 'http', 'fetch', () =>
+    axios.get(`https://lite.cnn.com${url}`)
+  );
   const html = response.data;
   const $ = load(html);
 
@@ -51,7 +59,12 @@ const startStepFunctionExecution = async (uuid: string, url: string, title: stri
     input: JSON.stringify({ uuid, url, title, text, byline, language }),
   };
   const command = new StartExecutionCommand(input);
-  const execution = await client.send(command);
+  const execution = await observeDependency(
+    'trigger',
+    'step_functions',
+    'start_execution',
+    () => client.send(command)
+  );
   return execution;
 };
 
@@ -60,7 +73,8 @@ const startStepFunctionExecution = async (uuid: string, url: string, title: stri
  *
  * @param event - The event object containing the records to process.
  */
-const main = async (event: any) => {
+const handler = async (event: any) => {
+  recordWorkflowBatch('trigger', event.Records.length);
   for (const record of event.Records) {
     const item = record.dynamodb.NewImage;
 
@@ -70,7 +84,9 @@ const main = async (event: any) => {
 
       try {
         const { title, byline, text } = await fetchAndParseArticle(url);
-        await db.updateTitle(uuid, title);
+        await observeDependency('trigger', 'dynamodb', 'update', () =>
+          db.updateTitle(uuid, title)
+        );
 
         for (const language of pollyLanguages) {
           const execution = await startStepFunctionExecution(uuid, url, title, text, byline, language);
@@ -81,11 +97,17 @@ const main = async (event: any) => {
             execution,
           });
         }
+        recordWorkflowOutcome('trigger', 'success');
       } catch (error) {
+        recordWorkflowOutcome('trigger', 'failure');
         console.error('Error:', error);
       }
+    } else {
+      recordWorkflowOutcome('trigger', 'skipped');
     }
   }
 };
+
+const main = instrumentHandler('trigger', handler);
 
 export { fetchAndParseArticle, main, startStepFunctionExecution };

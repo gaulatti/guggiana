@@ -16,4 +16,16 @@ test('Databases created', () => {
     TableName: `${stack.stackName}Tasks`,
     BillingMode: 'PAY_PER_REQUEST',
   });
+
+  const functions = template.findResources('AWS::Lambda::Function');
+  const instrumentedFunctions = Object.values(functions).filter(
+    (resource: any) =>
+      resource.Properties.Environment?.Variables?.GUGGIANA_BUILD_VERSION
+  );
+  expect(instrumentedFunctions).toHaveLength(7);
+  instrumentedFunctions.forEach((resource: any) => {
+    expect(resource.Properties.Environment.Variables).toEqual(
+      expect.objectContaining({ GUGGIANA_BUILD_VERSION: '0.1.0' })
+    );
+  });
 });
