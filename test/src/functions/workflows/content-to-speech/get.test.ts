@@ -3,7 +3,7 @@ const getMock = jest.fn();
 export {};
 const queryByUrlMock = jest.fn();
 const createMock = jest.fn();
-const checkLanguagesPresentMock = jest.fn();
+const addRequestedLocalesMock = jest.fn();
 const delayMock = jest.fn();
 const extractPathWithTrailingSlashMock = jest.fn();
 const presignMock = jest.fn();
@@ -14,16 +14,23 @@ jest.mock('crypto', () => ({
   randomUUID: jest.fn(() => 'generated-uuid'),
 }));
 
+jest.mock('../../../../../src/utils/consts/languages', () => ({
+  pollyLanguages: [
+    { code: 'en', items: [{ name: 'Matthew' }] },
+    { code: 'es', items: [{ name: 'Lupe' }] },
+  ],
+}));
+
 jest.mock('../../../../../src/utils/dal/content', () => ({
   getContentTableInstance: jest.fn(() => ({
     get: getMock,
     queryByUrl: queryByUrlMock,
     create: createMock,
+    addRequestedLocales: addRequestedLocalesMock,
   })),
 }));
 
 jest.mock('../../../../../src/utils', () => ({
-  checkLanguagesPresent: (...args: any[]) => checkLanguagesPresentMock(...args),
   delay: (...args: any[]) => delayMock(...args),
   extractPathWithTrailingSlash: (...args: any[]) =>
     extractPathWithTrailingSlashMock(...args),
@@ -64,6 +71,20 @@ jest.mock('@aws-sdk/util-format-url', () => ({
   formatUrl: (...args: any[]) => formatUrlMock(...args),
 }));
 
+const output = (uuid: string, code: string) => ({
+  url: `https://s3.us-east-1.amazonaws.com/audio-bucket/full/${uuid}-${code}.mp3`,
+});
+
+const item = (
+  uuid: string,
+  codes: string[],
+  extra: Record<string, any> = {}
+) => ({
+  uuid,
+  outputs: Object.fromEntries(codes.map((code) => [code, output(uuid, code)])),
+  ...extra,
+});
+
 describe('src/functions/workflows/content-to-speech/get main', () => {
   const originalEnv = process.env;
 
@@ -75,6 +96,7 @@ describe('src/functions/workflows/content-to-speech/get main', () => {
       TABLE_NAME: 'content-table',
     };
     delayMock.mockResolvedValue(undefined);
+    addRequestedLocalesMock.mockResolvedValue({});
     createRequestMock.mockResolvedValue({ host: 'signed-request' });
     presignMock.mockResolvedValue({
       protocol: 'https',
@@ -88,9 +110,12 @@ describe('src/functions/workflows/content-to-speech/get main', () => {
     process.env = originalEnv;
   });
 
+  const load = () =>
+    import('../../../../../src/functions/workflows/content-to-speech/get');
+
   it('throws when both contentId and href are missing', async () => {
     const callback = jest.fn();
-    const { main } = await import('../../../../../src/functions/workflows/content-to-speech/get');
+    const { main } = await load();
 
     await expect(
       main({ args: { input: {} } }, {}, callback)
@@ -102,7 +127,7 @@ describe('src/functions/workflows/content-to-speech/get main', () => {
     queryByUrlMock.mockResolvedValue(null);
     extractPathWithTrailingSlashMock.mockReturnValue(null);
 
-    const { main } = await import('../../../../../src/functions/workflows/content-to-speech/get');
+    const { main } = await load();
 
     await expect(
       main(
@@ -120,44 +145,32 @@ describe('src/functions/workflows/content-to-speech/get main', () => {
     ).rejects.toThrow('404');
   });
 
-  it('loads by contentId, waits until language is ready, and signs output urls', async () => {
+  it('rejects an unsupported language instead of silently generating another', async () => {
+    const { main } = await load();
+
+    await expect(
+      main({ args: { input: { contentId: 'uuid-1', language: 'fr' } } }, {}, jest.fn())
+    ).rejects.toThrow('Unsupported language: fr');
+    expect(getMock).not.toHaveBeenCalled();
+  });
+
+  it('waits only for the single requested locale and never for the others', async () => {
     const callback = jest.fn();
     getMock
-      .mockResolvedValueOnce({
-        uuid: 'uuid-1',
-        outputs: {
-          en: {
-            url: 'https://s3.us-east-1.amazonaws.com/audio-bucket/full/uuid-1-en.mp3',
-          },
-        },
-      })
-      .mockResolvedValueOnce({
-        uuid: 'uuid-1',
-        outputs: {
-          en: {
-            url: 'https://s3.us-east-1.amazonaws.com/audio-bucket/full/uuid-1-en.mp3',
-          },
-        },
-      });
-    checkLanguagesPresentMock
-      .mockReturnValueOnce(false)
-      .mockReturnValueOnce(true);
+      .mockResolvedValueOnce(item('uuid-1', []))
+      .mockResolvedValueOnce(item('uuid-1', ['en']));
 
-    const { main } = await import('../../../../../src/functions/workflows/content-to-speech/get');
+    const { main } = await load();
 
     await main(
-      {
-        args: {
-          input: {
-            contentId: 'uuid-1',
-            language: 'en',
-          },
-        },
-      },
+      { args: { input: { contentId: 'uuid-1', language: 'en' } } },
       {},
       callback
     );
 
+    // `es` was never requested, so it is never generated and never waited on.
+    expect(addRequestedLocalesMock).toHaveBeenCalledWith('uuid-1', ['en']);
+    expect(delayMock).toHaveBeenCalledTimes(1);
     expect(delayMock).toHaveBeenCalledWith(1000);
     expect(createRequestMock).toHaveBeenCalledTimes(1);
     expect(presignMock).toHaveBeenCalledWith(
@@ -170,48 +183,116 @@ describe('src/functions/workflows/content-to-speech/get main', () => {
     });
   });
 
-  it('creates a new record from href when no existing item is found', async () => {
-    extractPathWithTrailingSlashMock.mockReturnValue('/story/new');
-    queryByUrlMock.mockResolvedValue(null);
-    createMock.mockResolvedValue({ uuid: 'generated-uuid', url: '/story/new' });
-    getMock.mockResolvedValue({
-      uuid: 'generated-uuid',
-      outputs: {
-        en: {
-          url: 'https://s3.us-east-1.amazonaws.com/audio-bucket/full/generated-uuid-en.mp3',
-        },
-        es: {
-          url: 'https://s3.us-east-1.amazonaws.com/audio-bucket/full/generated-uuid-es.mp3',
-        },
-      },
-    });
-    checkLanguagesPresentMock.mockReturnValue(true);
-    formatUrlMock
-      .mockReturnValueOnce('https://signed.example.com/en.mp3')
-      .mockReturnValueOnce('https://signed.example.com/es.mp3');
-
+  it('serves a cached artifact without asking for any new work', async () => {
     const callback = jest.fn();
-    const { main } = await import('../../../../../src/functions/workflows/content-to-speech/get');
+    getMock.mockResolvedValue(item('uuid-1', ['en']));
+
+    const { main } = await load();
 
     await main(
-      {
-        args: {
-          input: {
-            href: 'https://www.cnn.com/story/new',
-          },
-        },
-      },
+      { args: { input: { contentId: 'uuid-1', language: 'en' } } },
       {},
       callback
     );
 
-    expect(createMock).toHaveBeenCalledWith('generated-uuid', '/story/new');
+    expect(addRequestedLocalesMock).not.toHaveBeenCalled();
+    expect(delayMock).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalled();
+  });
+
+  it('accepts an explicit locale subset', async () => {
+    const callback = jest.fn();
+    getMock.mockResolvedValue(item('uuid-1', ['es']));
+
+    const { main } = await load();
+
+    await main(
+      { args: { input: { contentId: 'uuid-1', languages: ['es'] } } },
+      {},
+      callback
+    );
+
+    expect(addRequestedLocalesMock).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalled();
+  });
+
+  it('does not re-request a locale the record already asked for', async () => {
+    const callback = jest.fn();
+    getMock
+      .mockResolvedValueOnce(item('uuid-1', [], { requestedLocales: ['en'] }))
+      .mockResolvedValueOnce(item('uuid-1', ['en'], { requestedLocales: ['en'] }));
+
+    const { main } = await load();
+
+    await main(
+      { args: { input: { contentId: 'uuid-1', language: 'en' } } },
+      {},
+      callback
+    );
+
+    expect(addRequestedLocalesMock).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalled();
+  });
+
+  it('waits for every supported locale on the explicit all-locales path', async () => {
+    const callback = jest.fn();
+    getMock
+      .mockResolvedValueOnce(item('uuid-1', ['en']))
+      .mockResolvedValueOnce(item('uuid-1', ['en', 'es']));
+    formatUrlMock
+      .mockReturnValueOnce('https://signed.example.com/en.mp3')
+      .mockReturnValueOnce('https://signed.example.com/es.mp3');
+
+    const { main } = await load();
+
+    await main(
+      { args: { input: { contentId: 'uuid-1', language: 'all' } } },
+      {},
+      callback
+    );
+
+    expect(addRequestedLocalesMock).toHaveBeenCalledWith('uuid-1', ['es']);
+    expect(delayMock).toHaveBeenCalledTimes(1);
+    expect(callback.mock.calls[0][1].outputs).toHaveLength(2);
+  });
+
+  it('keeps the previous contract when no language is supplied', async () => {
+    const callback = jest.fn();
+    getMock.mockResolvedValue(item('uuid-1', ['en', 'es']));
+    formatUrlMock
+      .mockReturnValueOnce('https://signed.example.com/en.mp3')
+      .mockReturnValueOnce('https://signed.example.com/es.mp3');
+
+    const { main } = await load();
+
+    await main({ args: { input: { contentId: 'uuid-1' } } }, {}, callback);
+
+    expect(addRequestedLocalesMock).not.toHaveBeenCalled();
+    expect(callback.mock.calls[0][1].outputs).toHaveLength(2);
+  });
+
+  it('creates a new record carrying only the requested locales', async () => {
+    extractPathWithTrailingSlashMock.mockReturnValue('/story/new');
+    queryByUrlMock.mockResolvedValue(null);
+    createMock.mockResolvedValue({ uuid: 'generated-uuid', url: '/story/new' });
+    getMock
+      .mockResolvedValueOnce(null)
+      .mockResolvedValue(item('generated-uuid', ['es']));
+
+    const callback = jest.fn();
+    const { main } = await load();
+
+    await main(
+      { args: { input: { href: 'https://www.cnn.com/story/new', language: 'es' } } },
+      {},
+      callback
+    );
+
+    expect(createMock).toHaveBeenCalledWith('generated-uuid', '/story/new', ['es']);
+    expect(addRequestedLocalesMock).not.toHaveBeenCalled();
     expect(callback).toHaveBeenCalledWith(null, {
       uuid: 'generated-uuid',
-      outputs: [
-        { code: 'en', url: 'https://signed.example.com/en.mp3' },
-        { code: 'es', url: 'https://signed.example.com/es.mp3' },
-      ],
+      outputs: [{ code: 'es', url: 'https://signed.example.com/file.mp3' }],
     });
   });
 
@@ -219,28 +300,16 @@ describe('src/functions/workflows/content-to-speech/get main', () => {
     getMock.mockResolvedValue({
       uuid: 'uuid-invalid',
       outputs: {
-        en: {
-          url: 'https://invalid-host/file.mp3',
-        },
+        en: { url: 'https://invalid-host/file.mp3' },
+        es: { url: 'https://invalid-host/file.mp3' },
       },
     });
-    checkLanguagesPresentMock.mockReturnValue(true);
 
     const callback = jest.fn();
-    const { main } = await import('../../../../../src/functions/workflows/content-to-speech/get');
+    const { main } = await load();
 
     await expect(
-      main(
-        {
-          args: {
-            input: {
-              contentId: 'uuid-invalid',
-            },
-          },
-        },
-        {},
-        callback
-      )
+      main({ args: { input: { contentId: 'uuid-invalid' } } }, {}, callback)
     ).rejects.toThrow('Invalid S3 URL');
     expect(callback).not.toHaveBeenCalled();
   });

@@ -11,6 +11,7 @@ This project is particularly useful for applications requiring multilingual text
 The repository includes the following features:
 - **Content-to-Speech Workflow**: Converts articles into audio using AWS Polly.
 - **Multilingual Support**: Processes content in multiple languages, including English, Spanish, French, German, and Portuguese.
+- **Lazy language renditions**: only the locales a caller explicitly asks for are translated and synthesized, with per-locale atomic claims so concurrent callers never duplicate the work. See [`docs/lazy-language-renditions.md`](docs/lazy-language-renditions.md).
 - **Dynamic Language Detection**: Automatically translates content before generating audio.
 - **SSML Support**: Prepares text in SSML (Speech Synthesis Markup Language) for enhanced audio quality.
 - **AWS Step Functions**: Orchestrates workflows for tasks such as translation, speech synthesis, and merging audio.
