@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+models/
+artifacts/
+results/*.json
+results/*.csv
+results/process-cold/
+!results/m1-max-piper-2026-09-06.json
+!results/m1-max-piper-2026-09-06.blinded.csv

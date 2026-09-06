@@ -15,6 +15,7 @@ The repository includes the following features:
 - **Dynamic Language Detection**: Automatically translates content before generating audio.
 - **SSML Support**: Prepares text in SSML (Speech Synthesis Markup Language) for enhanced audio quality.
 - **Provider-neutral speech contract**: `src/domain/speech/` defines the speech domain (locales, semantic voice roles, plain-text segments, explicit pauses, PCM output, job states, pinned artifact metadata) independently of Polly, with validation and a deterministic fake provider. It is not wired into the deployed workflow. See [`docs/speech-synthesis-contract.md`](docs/speech-synthesis-contract.md).
+- **Multilingual TTS bake-off**: `experiments/tts-bakeoff/` provides a pinned, standalone Chatterbox/Piper/Polly comparison with 20 fixtures, objective M1 metrics, structured unavailable results, and blinded human scoring. It does not import or change production code. See the [experiment guide](experiments/tts-bakeoff/README.md).
 - **AWS Step Functions**: Orchestrates workflows for tasks such as translation, speech synthesis, and merging audio.
 - **DynamoDB Integration**: Stores metadata and processing statuses for content.
 - **S3 Storage**: Manages audio files in S3 for easy accessibility.
@@ -77,6 +78,12 @@ npm test
 Run full test coverage with thresholds:
 ```bash
 npm run test:coverage
+```
+
+Run the offline TTS bake-off contract tests:
+
+```bash
+npm run test:tts-bakeoff
 ```
 
 For private repositories, configure `CODECOV_TOKEN` in GitHub repository secrets if your Codecov setup requires it.
