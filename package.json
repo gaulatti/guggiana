@@ -10,6 +10,7 @@
     "watch": "tsc -w",
     "test": "jest --config jest.config.ts",
     "test:coverage": "jest --config jest.config.ts --coverage",
+    "test:tts-bakeoff": "uv run --frozen --project experiments/tts-bakeoff python -m unittest discover -s experiments/tts-bakeoff/tests -v",
     "cdk": "cdk"
   },
   "devDependencies": {

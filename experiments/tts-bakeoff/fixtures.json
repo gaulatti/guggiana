@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "locales": ["en-US", "es-US", "fr-FR", "de-DE", "pt-BR"],
+  "fixtures": [
+    {
+      "id": "en-US-headline-byline",
+      "locale": "en-US",
+      "category": "headline-byline",
+      "text": "Coastal cities test a new flood-warning network — reported by Ana Martínez for the evening desk."
+    },
+    {
+      "id": "en-US-numbers-dates-currency",
+      "locale": "en-US",
+      "category": "numbers-dates-currency",
+      "text": "On September 6, 2026, the board approved $12.75 million, a 3.8 percent increase, for 1,204 neighborhood sensors."
+    },
+    {
+      "id": "en-US-acronyms-quotations",
+      "locale": "en-US",
+      "category": "acronyms-quotations",
+      "text": "The NOAA and NASA teams said, “The API is ready,” while Dr. Lee asked whether U.S. stations would publish the data."
+    },
+    {
+      "id": "en-US-long-form",
+      "locale": "en-US",
+      "category": "long-form",
+      "target_duration_seconds": {"min": 45, "max": 60},
+      "text": "At sunrise, volunteers gathered beside the old railway station to test a network of low-cost weather sensors. Each device measured rain, wind, temperature, and river height before sending a small report to the city dashboard. Engineers had spent months simplifying the instructions so that neighborhood groups could replace a battery or clean a gauge without special tools. During the first drill, one sensor stopped transmitting, but a librarian found a loose cable and restored it within minutes. The team then compared the local readings with the regional forecast and explained every difference in plain language. Organizers said the experiment was not only about faster warnings. It was also meant to build trust, give residents useful evidence, and make emergency decisions easier to understand."
+    },
+    {
+      "id": "es-US-headline-byline",
+      "locale": "es-US",
+      "category": "headline-byline",
+      "text": "Ciudades costeras prueban una nueva red de alerta de inundaciones — informó Ana Martínez para la edición vespertina."
+    },
+    {
+      "id": "es-US-numbers-dates-currency",
+      "locale": "es-US",
+      "category": "numbers-dates-currency",
+      "text": "El 6 de septiembre de 2026, la junta aprobó 12,75 millones de dólares, un aumento del 3,8 por ciento, para 1.204 sensores vecinales."
+    },
+    {
+      "id": "es-US-acronyms-quotations",
+      "locale": "es-US",
+      "category": "acronyms-quotations",
+      "text": "Los equipos de NOAA y NASA dijeron: «La API está lista», mientras la doctora López preguntó si las estaciones de EE. UU. publicarían los datos."
+    },
+    {
+      "id": "es-US-long-form",
+      "locale": "es-US",
+      "category": "long-form",
+      "target_duration_seconds": {"min": 45, "max": 60},
+      "text": "Al amanecer, un grupo de voluntarios se reunió junto a la antigua estación de tren para probar una red de sensores meteorológicos económicos. Cada equipo medía la lluvia, el viento, la temperatura y el nivel del río antes de enviar un informe breve al tablero de la ciudad. Los ingenieros habían dedicado meses a simplificar las instrucciones para que las organizaciones del vecindario pudieran cambiar una batería o limpiar un medidor sin herramientas especiales. Durante el primer simulacro, un sensor dejó de transmitir, pero una bibliotecaria encontró un cable suelto y restableció el servicio en pocos minutos. Después, el equipo comparó las lecturas locales con el pronóstico regional y explicó cada diferencia con palabras sencillas. Los organizadores señalaron que el experimento no solo buscaba alertas más rápidas, sino también fortalecer la confianza y facilitar decisiones de emergencia comprensibles."
+    },
+    {
+      "id": "fr-FR-headline-byline",
+      "locale": "fr-FR",
+      "category": "headline-byline",
+      "text": "Des villes côtières testent un nouveau réseau d’alerte aux inondations — un reportage d’Ana Martínez pour l’édition du soir."
+    },
+    {
+      "id": "fr-FR-numbers-dates-currency",
+      "locale": "fr-FR",
+      "category": "numbers-dates-currency",
+      "text": "Le 6 septembre 2026, le conseil a approuvé 12,75 millions d’euros, soit une hausse de 3,8 %, pour 1 204 capteurs de quartier."
+    },
+    {
+      "id": "fr-FR-acronyms-quotations",
+      "locale": "fr-FR",
+      "category": "acronyms-quotations",
+      "text": "Les équipes de la NOAA et de la NASA ont déclaré : « L’API est prête », tandis que la docteure Leroy demandait si les stations américaines publieraient les données."
+    },
+    {
+      "id": "fr-FR-long-form",
+      "locale": "fr-FR",
+      "category": "long-form",
+      "target_duration_seconds": {"min": 45, "max": 60},
+      "text": "Au lever du jour, des bénévoles se sont retrouvés près de l’ancienne gare pour tester un réseau de capteurs météorologiques peu coûteux. Chaque appareil mesurait la pluie, le vent, la température et le niveau de la rivière avant d’envoyer un bref rapport au tableau de bord municipal. Les ingénieurs avaient passé plusieurs mois à simplifier les instructions afin que les associations de quartier puissent remplacer une batterie ou nettoyer une jauge sans outil spécial. Pendant le premier exercice, un capteur a cessé de transmettre, mais une bibliothécaire a découvert un câble mal branché et a rétabli le service en quelques minutes. L’équipe a ensuite comparé les mesures locales aux prévisions régionales et expliqué chaque écart avec des mots simples. Les organisateurs ont rappelé que cette expérience devait accélérer les alertes, renforcer la confiance et rendre les décisions d’urgence plus faciles à comprendre."
+    },
+    {
+      "id": "de-DE-headline-byline",
+      "locale": "de-DE",
+      "category": "headline-byline",
+      "text": "Küstenstädte erproben ein neues Hochwasser-Warnnetz — berichtet von Ana Martínez für die Abendausgabe."
+    },
+    {
+      "id": "de-DE-numbers-dates-currency",
+      "locale": "de-DE",
+      "category": "numbers-dates-currency",
+      "text": "Am 6. September 2026 bewilligte der Rat 12,75 Millionen Euro, 3,8 Prozent mehr als zuvor, für 1.204 Sensoren in den Stadtvierteln."
+    },
+    {
+      "id": "de-DE-acronyms-quotations",
+      "locale": "de-DE",
+      "category": "acronyms-quotations",
+      "text": "Die Teams von NOAA und NASA sagten: „Die API ist bereit“, während Dr. Keller fragte, ob die US-Stationen die Daten veröffentlichen würden."
+    },
+    {
+      "id": "de-DE-long-form",
+      "locale": "de-DE",
+      "category": "long-form",
+      "target_duration_seconds": {"min": 45, "max": 60},
+      "text": "Bei Sonnenaufgang trafen sich Freiwillige am alten Bahnhof, um ein Netz aus preiswerten Wettersensoren zu testen. Jedes Gerät maß Regen, Wind, Temperatur und den Pegel des Flusses, bevor es einen kurzen Bericht an die städtische Übersicht sendete. Die Ingenieure hatten monatelang an einfachen Anleitungen gearbeitet, damit Nachbarschaftsgruppen eine Batterie wechseln oder einen Messfühler reinigen konnten, ohne besondere Werkzeuge zu benötigen. Während der ersten Übung fiel ein Sensor aus, doch eine Bibliothekarin entdeckte ein lockeres Kabel und stellte die Verbindung innerhalb weniger Minuten wieder her. Anschließend verglich das Team die lokalen Messwerte mit der regionalen Vorhersage und erklärte jede Abweichung in verständlicher Sprache. Das Experiment sollte nicht nur Warnungen beschleunigen, sondern auch Vertrauen schaffen und Entscheidungen in Notfällen nachvollziehbarer machen."
+    },
+    {
+      "id": "pt-BR-headline-byline",
+      "locale": "pt-BR",
+      "category": "headline-byline",
+      "text": "Cidades litorâneas testam uma nova rede de alerta de enchentes — reportagem de Ana Martínez para a edição da noite."
+    },
+    {
+      "id": "pt-BR-numbers-dates-currency",
+      "locale": "pt-BR",
+      "category": "numbers-dates-currency",
+      "text": "Em 6 de setembro de 2026, o conselho aprovou 12,75 milhões de reais, um aumento de 3,8 por cento, para 1.204 sensores comunitários."
+    },
+    {
+      "id": "pt-BR-acronyms-quotations",
+      "locale": "pt-BR",
+      "category": "acronyms-quotations",
+      "text": "As equipes da NOAA e da NASA disseram: “A API está pronta”, enquanto a doutora Lima perguntou se as estações dos EUA publicariam os dados."
+    },
+    {
+      "id": "pt-BR-long-form",
+      "locale": "pt-BR",
+      "category": "long-form",
+      "target_duration_seconds": {"min": 45, "max": 60},
+      "text": "Ao nascer do sol, voluntários se reuniram perto da antiga estação ferroviária para testar uma rede de sensores meteorológicos de baixo custo. Cada aparelho media chuva, vento, temperatura e o nível do rio antes de enviar um pequeno relatório ao painel da cidade. Os engenheiros passaram meses simplificando as instruções para que os grupos de bairro pudessem trocar uma bateria ou limpar um medidor sem ferramentas especiais. Durante o primeiro exercício, um sensor parou de transmitir, mas uma bibliotecária encontrou um cabo solto e recuperou a conexão em poucos minutos. Depois, a equipe comparou as leituras locais com a previsão regional e explicou cada diferença em linguagem clara. Os organizadores disseram que o experimento não tratava apenas de alertas mais rápidos. Ele também buscava criar confiança, oferecer evidências úteis aos moradores e tornar as decisões de emergência mais fáceis de entender."
+    }
+  ]
+}
