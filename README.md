@@ -13,6 +13,7 @@ The repository includes the following features:
 - **Multilingual Support**: Processes content in multiple languages, including English, Spanish, French, German, and Portuguese.
 - **Dynamic Language Detection**: Automatically translates content before generating audio.
 - **SSML Support**: Prepares text in SSML (Speech Synthesis Markup Language) for enhanced audio quality.
+- **Provider-neutral speech contract**: `src/domain/speech/` defines the speech domain (locales, semantic voice roles, plain-text segments, explicit pauses, PCM output, job states, pinned artifact metadata) independently of Polly, with validation and a deterministic fake provider. It is not wired into the deployed workflow. See [`docs/speech-synthesis-contract.md`](docs/speech-synthesis-contract.md).
 - **AWS Step Functions**: Orchestrates workflows for tasks such as translation, speech synthesis, and merging audio.
 - **DynamoDB Integration**: Stores metadata and processing statuses for content.
 - **S3 Storage**: Manages audio files in S3 for easy accessibility.
