@@ -1,6 +1,8 @@
 import {
   instrumentHandler,
   observeDependency,
+  recordRenditionRequest,
+  recordRenditionResult,
   recordRetry,
   recordWorkflowBacklog,
   recordWorkflowBatch,
@@ -106,5 +108,55 @@ describe('Guggiana embedded metrics collector', () => {
     const serialized = output.join('\n');
     expect(serialized).toContain('"result":"failure"');
     expect(serialized).not.toContain(privateValue);
+  });
+
+  it('emits rendition cost metrics with bounded dimensions and no content identity', () => {
+    recordRenditionRequest('get', 'single', 1);
+    recordRenditionResult('get', 'single', 'hit', 1);
+    recordRenditionResult('trigger', 'all', 'miss', 5);
+    recordRenditionResult('trigger', 'subset', 'reused', 2);
+    recordRenditionResult('trigger', 'single', 'failed', 1);
+
+    const records = output.map((line) => JSON.parse(line));
+    expect(records).toHaveLength(5);
+
+    for (const record of records) {
+      expect(['single', 'subset', 'all']).toContain(record.locale_class);
+      expect(Object.keys(record)).not.toContain('uuid');
+      expect(Object.keys(record)).not.toContain('contentId');
+      expect(Object.keys(record)).not.toContain('url');
+      const dimensions = record._aws.CloudWatchMetrics[0].Dimensions[0];
+      for (const dimension of dimensions) {
+        expect(['service', 'stage', 'locale_class', 'result']).toContain(dimension);
+      }
+    }
+
+    expect(records[0].guggiana_rendition_requested_locales).toBe(1);
+    expect(records[1]).toMatchObject({
+      stage: 'get',
+      locale_class: 'single',
+      result: 'hit',
+      guggiana_rendition_locales_total: 1,
+    });
+    expect(records[2]).toMatchObject({
+      stage: 'trigger',
+      locale_class: 'all',
+      result: 'miss',
+      guggiana_rendition_locales_total: 5,
+    });
+    expect(records.map((record) => record.result)).toEqual([
+      undefined,
+      'hit',
+      'miss',
+      'reused',
+      'failed',
+    ]);
+  });
+
+  it('does not emit a rendition result series for a zero count', () => {
+    recordRenditionResult('get', 'single', 'miss', 0);
+    recordRenditionResult('get', 'single', 'failed', -1);
+
+    expect(output).toHaveLength(0);
   });
 });

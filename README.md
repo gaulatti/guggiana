@@ -11,6 +11,7 @@ This project is particularly useful for applications requiring multilingual text
 The repository includes the following features:
 - **Content-to-Speech Workflow**: Converts articles into audio using AWS Polly.
 - **Multilingual Support**: Processes content in multiple languages, including English, Spanish, French, German, and Portuguese.
+- **Lazy language renditions**: only the locales a caller explicitly asks for are translated and synthesized, with per-locale atomic claims so concurrent callers never duplicate the work. See [`docs/lazy-language-renditions.md`](docs/lazy-language-renditions.md).
 - **Dynamic Language Detection**: Automatically translates content before generating audio.
 - **SSML Support**: Prepares text in SSML (Speech Synthesis Markup Language) for enhanced audio quality.
 - **Provider-neutral speech contract**: `src/domain/speech/` defines the speech domain (locales, semantic voice roles, plain-text segments, explicit pauses, PCM output, job states, pinned artifact metadata) independently of Polly, with validation and a deterministic fake provider. It is not wired into the deployed workflow. See [`docs/speech-synthesis-contract.md`](docs/speech-synthesis-contract.md).

@@ -179,6 +179,99 @@ describe('src/utils/dal/content DBClient', () => {
     await expect(db.queryByUrl('/missing')).resolves.toBeNull();
   });
 
+  it('stores the requested locales on a new content record', async () => {
+    sendMock.mockResolvedValue({});
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await db.create('uuid', '/story', ['en-US']);
+
+    expect(sendMock.mock.calls[0][0].input.Item.requestedLocales).toEqual(['en-US']);
+  });
+
+  it('defaults a new content record to no requested locales', async () => {
+    sendMock.mockResolvedValue({});
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await db.create('uuid', '/story');
+
+    expect(sendMock.mock.calls[0][0].input.Item.requestedLocales).toEqual([]);
+  });
+
+  it('appends requested locales without withdrawing existing ones', async () => {
+    sendMock.mockResolvedValue({ Attributes: { uuid: 'id' } });
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await db.addRequestedLocales('id', ['es-US']);
+
+    const command = sendMock.mock.calls[0][0];
+    expect(command.input.UpdateExpression).toContain('list_append');
+    expect(command.input.ExpressionAttributeValues[':locales']).toEqual(['es-US']);
+    expect(command.input.ExpressionAttributeValues[':empty']).toEqual([]);
+  });
+
+  it('claims a locale with a single conditional write', async () => {
+    sendMock.mockResolvedValue({ Attributes: { uuid: 'id' } });
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await expect(
+      db.claimRendition('id', 'en-US', '2026-09-06T12:00:00.000Z', '2026-09-06T11:45:00.000Z')
+    ).resolves.toBe(true);
+
+    const command = sendMock.mock.calls[0][0];
+    expect(command.input.ExpressionAttributeNames['#rendition']).toBe('rendition#en-US');
+    expect(command.input.ConditionExpression).toBe(
+      'attribute_not_exists(#rendition) OR #rendition.#status = :failed OR #rendition.#claimedAt < :expiredBefore'
+    );
+    expect(command.input.ExpressionAttributeValues[':claim']).toEqual({
+      status: 'queued',
+      claimedAt: '2026-09-06T12:00:00.000Z',
+    });
+    expect(command.input.ExpressionAttributeValues[':expiredBefore']).toBe(
+      '2026-09-06T11:45:00.000Z'
+    );
+  });
+
+  it('reports a lost race instead of duplicating the rendition', async () => {
+    const conditionalFailure: any = new Error('claim already held');
+    conditionalFailure.name = 'ConditionalCheckFailedException';
+    sendMock.mockRejectedValue(conditionalFailure);
+
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await expect(
+      db.claimRendition('id', 'en-US', 'now', 'expiry')
+    ).resolves.toBe(false);
+  });
+
+  it('propagates a claim failure that is not a lost race', async () => {
+    sendMock.mockRejectedValue(new Error('throttled'));
+
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await expect(db.claimRendition('id', 'en-US', 'now', 'expiry')).rejects.toThrow(
+      'throttled'
+    );
+  });
+
+  it('moves one locale to a new status without touching the others', async () => {
+    sendMock.mockResolvedValue({ Attributes: { uuid: 'id' } });
+    const { DBClient } = await import('../../../../src/utils/dal/content');
+    const db = new DBClient('table');
+
+    await db.updateRenditionStatus('id', 'pt-BR', 'failed');
+
+    const command = sendMock.mock.calls[0][0];
+    expect(command.input.ExpressionAttributeNames['#rendition']).toBe('rendition#pt-BR');
+    expect(command.input.ExpressionAttributeValues[':claim'].status).toBe('failed');
+    expect(command.input.ConditionExpression).toBeUndefined();
+  });
+
   it('returns singleton instance from getContentTableInstance', async () => {
     const { getContentTableInstance } = await import('../../../../src/utils/dal/content');
 

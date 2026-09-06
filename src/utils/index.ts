@@ -79,6 +79,12 @@ const lambdaHttpOutput = (statusCode: number, output?: any) => {
  * @param language - The language to check for. If null, checks for all supported languages.
  * @returns True if the language is present in the item's outputs, false otherwise.
  */
+/**
+ * Legacy single-language presence check, kept for existing callers.
+ *
+ * Prefer `renditionsPresent` from `src/utils/renditions` for the multi-locale
+ * form used by the lazy rendition path.
+ */
 const checkLanguagesPresent = (item: any, language: string | null): boolean => {
   const languageCodes = pollyLanguages.map((item: LanguageObject) => item.code);
 
