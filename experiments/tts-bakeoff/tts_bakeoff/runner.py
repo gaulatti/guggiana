@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .adapters import EngineUnavailable, build_adapter
+from .asr import AsrFailed, AsrUnavailable, FasterWhisperAdapter
 from .audio import inspect_wav
 from .catalog import canonical_json_sha256, host_metadata
 from .network import deny_network
@@ -31,10 +32,13 @@ def run_bakeoff(
     seed: int = 20260906,
     piper_espeak_data_dir: Path | None = None,
     fixture_ids: set[str] | None = None,
+    asr_config: dict[str, Any] | None = None,
+    asr_model_dir: Path | None = None,
 ) -> dict[str, Any]:
     generated_at = datetime.now(timezone.utc).isoformat()
     fixture_sha = canonical_json_sha256(fixtures_catalog)
     config_sha = canonical_json_sha256(config)
+    asr_config_sha = canonical_json_sha256(asr_config) if asr_config is not None else None
     blind_context = canonical_json_sha256(
         {"config": config_sha, "voice_reference_id": voice_reference_id, "seed": seed}
     )
@@ -50,21 +54,23 @@ def run_bakeoff(
             "network_enabled": allow_network,
             "region": region,
             "piper_espeak_data_override": bool(piper_espeak_data_dir),
+            "asr_config": asr_config_sha,
         }
     )[:16]
     manifest: dict[str, Any] = {
-        "schema_version": 1,
+        "schema_version": 2,
         "run_id": run_id,
         "generated_at": generated_at,
         "fixtures_sha256": fixture_sha,
         "engine_config_sha256": config_sha,
+        "asr_config_sha256": asr_config_sha,
         "host": host_metadata(),
         "measurement": {
             "clock": "time.perf_counter_ns",
             "cold_load": "first load for each local model in this process; OS filesystem caches were not purged",
             "peak_memory": "10 ms RSS sampling with psutil when installed; process max-RSS fallback otherwise",
             "rtf": "synthesis_seconds divided by WAV duration_seconds",
-            "semantic_integrity": "unverified unless ASR or blinded human scores are supplied",
+            "semantic_integrity": "ASR WER/CER and checks are diagnostic; human review remains independent",
             "mps_determinism": "seeded, but exact reproducibility is not guaranteed by the MPS backend",
         },
         "execution": {
@@ -78,6 +84,7 @@ def run_bakeoff(
             "piper_espeak_data_override": bool(piper_espeak_data_dir),
             "installed_distributions": _installed_distributions(),
         },
+        "asr_provenance": asr_config,
         "requested_engines": engines,
         "engine_provenance": {
             name: config["engines"][name] for name in engines if name in config["engines"]
@@ -92,6 +99,17 @@ def run_bakeoff(
     ]
     if fixture_ids and {fixture["id"] for fixture in selected_fixtures} != fixture_ids:
         raise ValueError("one or more selected fixture IDs do not exist")
+
+    asr_adapter: FasterWhisperAdapter | None = None
+    asr_unavailable_reason: str | None = None
+    if asr_config is not None:
+        if asr_model_dir is None:
+            raise ValueError("an ASR model directory is required when ASR is enabled")
+        try:
+            with deny_network():
+                asr_adapter = FasterWhisperAdapter(asr_config, asr_model_dir)
+        except AsrUnavailable as error:
+            asr_unavailable_reason = error.reason
 
     for engine_name in engines:
         try:
@@ -109,14 +127,15 @@ def run_bakeoff(
                     seed=seed,
                     piper_espeak_data_dir=piper_espeak_data_dir,
                 )
-        except (EngineUnavailable, ImportError):
+        except (EngineUnavailable, ImportError) as error:
+            reason = error.reason if isinstance(error, EngineUnavailable) else "missing-dependency"
             for fixture in selected_fixtures:
                 manifest["records"].append(
                     unavailable_record(
                         engine_name,
                         fixture,
                         blind_context,
-                        "required dependency or explicitly supplied artifact is unavailable",
+                        reason,
                     )
                 )
             continue
@@ -129,6 +148,25 @@ def run_bakeoff(
                 with boundary, measure_peak_memory() as memory:
                     measurement = adapter.synthesize(fixture, output)
                 audio = inspect_wav(output, fixture.get("target_duration_seconds"))
+                asr = _evaluate_asr(
+                    asr_adapter,
+                    asr_unavailable_reason,
+                    output,
+                    fixture,
+                    enabled=asr_config is not None,
+                )
+                objective_status = (
+                    "warning"
+                    if audio["truncation"]["outside_target"]
+                    or audio["repetition"]["exact_repeated_windows"] > 0
+                    else "completed"
+                )
+                record_status = (
+                    "warning"
+                    if objective_status == "warning"
+                    or asr["status"] in {"warning", "failed", "unavailable"}
+                    else "completed"
+                )
                 manifest["records"].append(
                     {
                         "engine": engine_name,
@@ -136,7 +174,12 @@ def run_bakeoff(
                         "locale": fixture["locale"],
                         "category": fixture["category"],
                         "blind_id": blind_id,
-                        "status": "succeeded",
+                        "status": record_status,
+                        "evidence": {
+                            "objective_audio": objective_status,
+                            "asr_semantic": asr["status"],
+                            "human_review": "not-run",
+                        },
                         "failure": None,
                         "model": measurement.model,
                         "voice": measurement.voice,
@@ -148,17 +191,17 @@ def run_bakeoff(
                         "incremental_peak_rss_mib": memory.incremental_peak_mib,
                         "rtf": _round(measurement.synthesis_seconds / audio["duration_seconds"]),
                         "audio": {**audio, "artifact": f"{blind_id}.wav"},
-                        "asr": {"status": "not-run", "wer": None, "transcript_sha256": None},
+                        "asr": asr,
                     }
                 )
-            except EngineUnavailable:
+            except EngineUnavailable as error:
                 output.unlink(missing_ok=True)
                 manifest["records"].append(
                     unavailable_record(
                         engine_name,
                         fixture,
                         blind_context,
-                        "required verified local artifact is unavailable",
+                        error.reason,
                     )
                 )
             except Exception as error:
@@ -173,8 +216,9 @@ def run_bakeoff(
         "status": "no-selection",
         "reason": "Objective results alone cannot pass the required blinded human, locale-accent, semantic-integrity, and license gates.",
         "es-US": config["decision_gates"]["es-US"],
-        "next_step": "Score successful blinded clips with qualified reviewers, add ASR or transcript review, and obtain license approval before choosing a replacement.",
+        "next_step": "Lock qualified blinded scores and obtain explicit locale and license approval before choosing a replacement.",
     }
+    manifest["evidence_readiness"] = evidence_readiness(manifest)
     return manifest
 
 
@@ -192,7 +236,12 @@ def unavailable_record(
         "category": fixture["category"],
         "blind_id": make_blind_id(engine, fixture["id"], config_sha),
         "status": "unavailable",
-        "failure": {"type": "EngineUnavailable", "message": reason},
+        "evidence": {
+            "objective_audio": "unavailable",
+            "asr_semantic": "not-run",
+            "human_review": "not-run",
+        },
+        "failure": {"type": "EngineUnavailable", "reason": reason},
         "model": None,
         "voice": None,
         "backend": None,
@@ -202,7 +251,7 @@ def unavailable_record(
         "incremental_peak_rss_mib": None,
         "rtf": None,
         "audio": None,
-        "asr": {"status": "not-run", "wer": None, "transcript_sha256": None},
+        "asr": _empty_asr("not-run", "no-audio-artifact"),
     }
 
 
@@ -213,6 +262,7 @@ def failed_record(
         engine, fixture, config_sha, "synthesis or audio validation failed"
     )
     record["status"] = "failed"
+    record["evidence"]["objective_audio"] = "failed"
     record["failure"] = {
         "type": type(error).__name__,
         "reason": "synthesis-or-audio-validation-failed",
@@ -221,11 +271,93 @@ def failed_record(
     return record
 
 
+def _empty_asr(status: str, reason: str) -> dict[str, Any]:
+    return {
+        "status": status,
+        "reason": reason,
+        "adapter": None,
+        "model": None,
+        "model_revision": None,
+        "wer": None,
+        "cer": None,
+        "missing_tail": None,
+        "repeated_spans": None,
+        "fixture_checks": {},
+        "warning_codes": [],
+        "transcript_sha256": None,
+        "transcript_recorded": False,
+    }
+
+
+def _evaluate_asr(
+    adapter: FasterWhisperAdapter | None,
+    unavailable_reason: str | None,
+    audio_path: Path,
+    fixture: dict[str, Any],
+    *,
+    enabled: bool,
+) -> dict[str, Any]:
+    if not enabled:
+        return _empty_asr("not-run", "not-requested")
+    if adapter is None:
+        return _empty_asr("unavailable", unavailable_reason or "adapter-unavailable")
+    try:
+        with deny_network():
+            return adapter.evaluate(audio_path, fixture)
+    except AsrUnavailable as error:
+        return _empty_asr("unavailable", error.reason)
+    except AsrFailed:
+        return _empty_asr("failed", "local-asr-transcription-failed")
+    except Exception:
+        return _empty_asr("failed", "local-asr-evaluation-failed")
+
+
+def evidence_readiness(manifest: dict[str, Any]) -> dict[str, Any]:
+    audio_records = [
+        record for record in manifest["records"] if record["status"] in {"completed", "warning"}
+    ]
+    semantic_complete = audio_records and all(
+        record["asr"]["status"] in {"completed", "warning"} for record in audio_records
+    )
+    needs_reference = any(
+        (record.get("failure") or {}).get("reason") == "needs-consented-reference"
+        for record in manifest["records"]
+    )
+    review_packet_complete = manifest.get("review_packet", {}).get("status") == "completed"
+    if semantic_complete and review_packet_complete:
+        status = "ready-for-human-review"
+        reason = "Every available audio artifact has objective and local-ASR diagnostic evidence, and the blinded packet is complete."
+    elif not audio_records and needs_reference:
+        status = "needs-consented-reference"
+        reason = "No Chatterbox evidence can be generated without an independently consented local reference."
+    else:
+        status = "candidate-ineligible"
+        reason = "The requested machine-evidence packet is incomplete; inspect per-record evidence states."
+
+    remaining = [
+        "Qualified reviewers must lock blinded intelligibility, naturalness, cadence, pronunciation, and accent-fit scores.",
+        "A qualified U.S.-Spanish reviewer must decide whether any comparator fits es-US; es-MX and generic Spanish remain non-equivalent.",
+        "An authorized legal/product approver must accept the runtime, model, voice/dataset licenses and attribution plan.",
+    ]
+    if needs_reference:
+        remaining.append(
+            "Chatterbox evaluation additionally requires a local reference clip with recorded consent and usage rights."
+        )
+    if any(record["engine"] == "polly" for record in manifest["records"]):
+        remaining.append("Any Polly comparison requires separate paid-service authorization.")
+    return {"status": status, "reason": reason, "remaining_human_input": remaining}
+
+
 def summarize(manifest: dict[str, Any]) -> dict[str, Any]:
     output: dict[str, Any] = {}
     for engine in manifest["requested_engines"]:
         records = [record for record in manifest["records"] if record["engine"] == engine]
-        successful = [record for record in records if record["status"] == "succeeded"]
+        successful = [record for record in records if record["status"] in {"completed", "warning"}]
+        semantic = [
+            record["asr"]
+            for record in successful
+            if record["asr"]["status"] in {"completed", "warning"}
+        ]
         rtfs = [record["rtf"] for record in successful]
         synth = [record["synthesis_seconds"] for record in successful]
         cold_loads = [
@@ -237,7 +369,8 @@ def summarize(manifest: dict[str, Any]) -> dict[str, Any]:
         incremental_peak = [record["incremental_peak_rss_mib"] for record in successful]
         output[engine] = {
             "total": len(records),
-            "succeeded": len(successful),
+            "completed": sum(record["status"] == "completed" for record in records),
+            "warning": sum(record["status"] == "warning" for record in records),
             "failed": sum(record["status"] == "failed" for record in records),
             "unavailable": sum(record["status"] == "unavailable" for record in records),
             "median_rtf": _median(rtfs),
@@ -253,7 +386,16 @@ def summarize(manifest: dict[str, Any]) -> dict[str, Any]:
                 incremental_peak, default=None
             ),
             "output_bytes": sum(record["audio"]["size_bytes"] for record in successful),
-            "semantic_integrity": "unverified" if successful else "not-applicable",
+            "semantic_integrity": (
+                "diagnostic-completed" if len(semantic) == len(successful) and successful else "incomplete"
+            ) if successful else "not-applicable",
+            "asr_completed": sum(item["status"] == "completed" for item in semantic),
+            "asr_warning": sum(item["status"] == "warning" for item in semantic),
+            "asr_unavailable": sum(record["asr"]["status"] == "unavailable" for record in successful),
+            "asr_failed": sum(record["asr"]["status"] == "failed" for record in successful),
+            "asr_not_run": sum(record["asr"]["status"] == "not-run" for record in successful),
+            "median_wer": _median([item["wer"] for item in semantic]),
+            "median_cer": _median([item["cer"] for item in semantic]),
             "integrity_warnings": sum(
                 bool(record["audio"]["truncation"]["outside_target"])
                 or record["audio"]["repetition"]["exact_repeated_windows"] > 0
@@ -277,6 +419,8 @@ def combine_process_cold_manifests(manifests: list[dict[str, Any]]) -> dict[str,
             raise ValueError("cannot combine manifests from different fixture catalogs")
         if manifest["engine_config_sha256"] != first["engine_config_sha256"]:
             raise ValueError("cannot combine manifests from different engine catalogs")
+        if manifest.get("asr_config_sha256") != first.get("asr_config_sha256"):
+            raise ValueError("cannot combine manifests from different ASR catalogs")
         if manifest["host"] != first["host"]:
             raise ValueError("cannot combine manifests from different hosts")
 
@@ -318,6 +462,7 @@ def combine_process_cold_manifests(manifests: list[dict[str, Any]]) -> dict[str,
         "source_processes": len(manifests),
     }
     combined["summary"] = summarize(combined)
+    combined["evidence_readiness"] = evidence_readiness(combined)
     return combined
 
 
@@ -339,7 +484,7 @@ def write_blinded_sheet(manifest: dict[str, Any], path: Path) -> None:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for record in manifest["records"]:
-            if record["status"] != "succeeded":
+            if record["status"] not in {"completed", "warning"}:
                 continue
             writer.writerow(
                 {
@@ -363,14 +508,42 @@ def render_report(manifest: dict[str, Any]) -> str:
         "",
         f"Run `{manifest['run_id']}` on `{manifest['host'].get('chip') or manifest['host'].get('model') or manifest['host']['machine']}`.",
         "",
-        "| Engine | Success | Failed | Unavailable | Median RTF | Median peak RSS MiB | Median cold load s | Integrity warnings |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Engine | Completed | Warning | Failed | Unavailable | Median RTF | Median peak RSS MiB | Median cold load s | Median WER | Median CER | Integrity warnings |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for engine, summary in manifest["summary"].items():
         lines.append(
-            f"| {engine} | {summary['succeeded']} | {summary['failed']} | {summary['unavailable']} | "
-            f"{_display(summary['median_rtf'])} | {_display(summary['median_peak_rss_mib'])} | "
-            f"{_display(summary['median_cold_load_seconds'])} | {summary['integrity_warnings']} |"
+            f"| {engine} | {summary['completed']} | {summary['warning']} | {summary['failed']} | "
+            f"{summary['unavailable']} | {_display(summary['median_rtf'])} | "
+            f"{_display(summary['median_peak_rss_mib'])} | "
+            f"{_display(summary['median_cold_load_seconds'])} | "
+            f"{_display(summary['median_wer'])} | {_display(summary['median_cer'])} | "
+            f"{summary['integrity_warnings']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Per-fixture semantic diagnostics",
+            "",
+            "WER/CER are diagnostic edit distances, not automatic pass thresholds. No transcript text is recorded.",
+            "",
+            "| Engine | Fixture | State | WER | CER | Tail coverage | Extra repeated spans | Fixture checks | Warnings |",
+            "| --- | --- | --- | ---: | ---: | ---: | ---: | --- | --- |",
+        ]
+    )
+    for record in manifest["records"]:
+        if record["status"] not in {"completed", "warning"}:
+            continue
+        asr = record["asr"]
+        tail = asr.get("missing_tail") or {}
+        repeated = asr.get("repeated_spans") or {}
+        lines.append(
+            f"| {record['engine']} | {record['fixture_id']} | {asr['status']} | "
+            f"{_display(asr.get('wer'))} | {_display(asr.get('cer'))} | "
+            f"{_display(tail.get('coverage'))} | "
+            f"{_display(repeated.get('extra_occurrences'))} | "
+            f"{_display_fixture_checks(asr.get('fixture_checks', {}))} | "
+            f"{', '.join(asr.get('warning_codes', [])) or '—'} |"
         )
     lines.extend(
         [
@@ -381,16 +554,24 @@ def render_report(manifest: dict[str, Any]) -> str:
             "",
             f"es-US: {manifest['decision']['es-US']}",
             "",
+            "## Evidence readiness",
+            "",
+            f"**{manifest['evidence_readiness']['status']}** — {manifest['evidence_readiness']['reason']}",
+            "",
+            "Remaining human input:",
+            *[f"- {item}" for item in manifest['evidence_readiness']['remaining_human_input']],
+            "",
             "## Evidence boundaries",
             "",
             f"- Process-cold: `{str(manifest['execution'].get('process_cold', False)).lower()}`; source processes: `{manifest['execution'].get('source_processes', 1)}`.",
-            f"- Installed Piper/psutil: `{manifest['execution']['installed_distributions'].get('piper-tts')}` / `{manifest['execution']['installed_distributions'].get('psutil')}`.",
+            f"- Installed Piper/Faster-Whisper/psutil: `{manifest['execution']['installed_distributions'].get('piper-tts')}` / `{manifest['execution']['installed_distributions'].get('faster-whisper')}` / `{manifest['execution']['installed_distributions'].get('psutil')}`.",
             f"- Network enabled: `{str(manifest['execution'].get('network_enabled', False)).lower()}`; Polly was not contacted.",
             f"- Piper short eSpeak data-path override: `{str(manifest['execution'].get('piper_espeak_data_override', False)).lower()}` (upstream macOS wheel path-length defect).",
             "- Chatterbox was not run without its pinned multi-gigabyte snapshot and a consented reference; Polly was not run without explicit AWS authorization.",
-            "- ASR and human review were not run. Semantic truncation, repetition, pronunciation, and accent fit therefore remain unverified.",
+            "- ASR WER/CER, missing-tail, repeated-span, and fixture checks are diagnostic evidence, not human judgement or universal pass thresholds.",
+            "- Human intelligibility, naturalness, cadence, pronunciation, and accent-fit scores are not yet locked.",
             "",
-            "Generated audio and model files are deliberately not committed. The manifest records objective evidence; the blinded sheet is the human-review input.",
+            "Generated audio, models, and the private engine key are deliberately not committed. The checksummed public packet is the human-review input.",
             "",
         ]
     )
@@ -409,9 +590,25 @@ def _display(value: object) -> str:
     return "—" if value is None else str(value)
 
 
+def _display_fixture_checks(checks: dict[str, Any]) -> str:
+    if not checks:
+        return "—"
+    return ", ".join(
+        f"{name} {details['matched']}/{details['expected']}"
+        for name, details in checks.items()
+    )
+
+
 def _installed_distributions() -> dict[str, str | None]:
     versions: dict[str, str | None] = {}
-    for distribution in ("piper-tts", "chatterbox-tts", "boto3", "psutil"):
+    for distribution in (
+        "piper-tts",
+        "chatterbox-tts",
+        "boto3",
+        "psutil",
+        "faster-whisper",
+        "ctranslate2",
+    ):
         try:
             versions[distribution] = importlib.metadata.version(distribution)
         except importlib.metadata.PackageNotFoundError:

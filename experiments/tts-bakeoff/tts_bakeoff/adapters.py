@@ -16,6 +16,10 @@ from .catalog import file_digest
 class EngineUnavailable(RuntimeError):
     """An optional engine cannot run in the current explicit environment."""
 
+    def __init__(self, message: str, reason: str = "engine-unavailable"):
+        super().__init__(message)
+        self.reason = reason
+
 
 @dataclass
 class SynthesisMeasurement:
@@ -84,7 +88,8 @@ class PiperAdapter(Adapter):
             from piper import PiperVoice
         except ImportError as error:
             raise EngineUnavailable(
-                "piper-tts is not installed; sync the pinned piper extra"
+                "piper-tts is not installed; sync the pinned piper extra",
+                "missing-dependency",
             ) from error
         self.voice_class = PiperVoice
 
@@ -94,24 +99,25 @@ class PiperAdapter(Adapter):
         model_config = Path(f"{model}.json")
         if not model.is_file() or not model_config.is_file():
             raise EngineUnavailable(
-                f"verified Piper model is absent for {locale}; run the explicit fetch command"
+                f"verified Piper model is absent for {locale}; run the explicit fetch command",
+                "missing-verified-model",
             )
         if file_digest(model, "md5") != mapping["model_md5"]:
-            raise EngineUnavailable(f"Piper model checksum mismatch for {locale}")
+            raise EngineUnavailable(f"Piper model checksum mismatch for {locale}", "model-checksum-mismatch")
         if file_digest(model) != mapping["model_sha256"]:
-            raise EngineUnavailable(f"Piper model SHA-256 mismatch for {locale}")
+            raise EngineUnavailable(f"Piper model SHA-256 mismatch for {locale}", "model-checksum-mismatch")
         if file_digest(model_config, "md5") != mapping["config_md5"]:
-            raise EngineUnavailable(f"Piper config checksum mismatch for {locale}")
+            raise EngineUnavailable(f"Piper config checksum mismatch for {locale}", "model-checksum-mismatch")
         model_card = model.parent / "MODEL_CARD"
         if not model_card.is_file() or file_digest(model_card, "md5") != mapping["model_card_md5"]:
-            raise EngineUnavailable(f"Piper model-card provenance mismatch for {locale}")
+            raise EngineUnavailable(f"Piper model-card provenance mismatch for {locale}", "model-provenance-mismatch")
         if locale in self.loaded:
             return self.loaded[locale], None, mapping
         start = time.perf_counter_ns()
         load_options: dict[str, Any] = {"config_path": str(model_config)}
         if self.espeak_data_dir:
             if not (self.espeak_data_dir / "phontab").is_file():
-                raise EngineUnavailable("explicit Piper eSpeak data directory is invalid")
+                raise EngineUnavailable("explicit Piper eSpeak data directory is invalid", "invalid-espeak-data")
             load_options["espeak_data_dir"] = str(self.espeak_data_dir)
         voice = self.voice_class.load(str(model), **load_options)
         elapsed = (time.perf_counter_ns() - start) / 1_000_000_000
@@ -148,11 +154,13 @@ class ChatterboxAdapter(Adapter):
     ):
         if not voice_reference or not voice_reference.is_file():
             raise EngineUnavailable(
-                "Chatterbox requires a consented local voice reference via --voice-reference"
+                "Chatterbox requires a consented local voice reference via --voice-reference",
+                "needs-consented-reference",
             )
         if not voice_reference_id:
             raise EngineUnavailable(
-                "Chatterbox requires an opaque consent/provenance ID via --voice-reference-id"
+                "Chatterbox requires an opaque consent/provenance ID via --voice-reference-id",
+                "needs-consented-reference",
             )
         self.config = engine_config
         self.model_dir = model_dir
@@ -168,7 +176,8 @@ class ChatterboxAdapter(Adapter):
             from chatterbox.mtl_tts import ChatterboxMultilingualTTS
         except ImportError as error:
             raise EngineUnavailable(
-                "chatterbox-tts is not installed; sync the pinned chatterbox extra"
+                "chatterbox-tts is not installed; sync the pinned chatterbox extra",
+                "missing-dependency",
             ) from error
         self.torch = torch
         self.model_class = ChatterboxMultilingualTTS
@@ -184,12 +193,12 @@ class ChatterboxAdapter(Adapter):
         checkpoint_dir = self.model_dir / model_name
         t3_file = checkpoint_dir / details["file"]
         if not t3_file.is_file() or file_digest(t3_file) != details["sha256"]:
-            raise EngineUnavailable(f"verified Chatterbox checkpoint is absent for {locale}")
+            raise EngineUnavailable(f"verified Chatterbox checkpoint is absent for {locale}", "missing-verified-model")
         for required_file in details["required_files"]:
             filename = required_file["local_file"]
             candidate = checkpoint_dir / filename
             if not candidate.is_file() or file_digest(candidate) != required_file["sha256"]:
-                raise EngineUnavailable(f"Chatterbox file is absent or invalid: {filename}")
+                raise EngineUnavailable(f"Chatterbox file is absent or invalid: {filename}", "model-checksum-mismatch")
         if model_name in self.loaded:
             return self.loaded[model_name], None, mapping
         self._sync_device()
@@ -237,11 +246,16 @@ class PollyAdapter(Adapter):
 
     def __init__(self, engine_config: dict[str, Any], allow_network: bool, region: str | None):
         if not allow_network:
-            raise EngineUnavailable("Polly is disabled unless --allow-network is explicitly supplied")
+            raise EngineUnavailable(
+                "Polly is disabled unless --allow-network is explicitly supplied",
+                "paid-service-not-authorized",
+            )
         try:
             import boto3
         except ImportError as error:
-            raise EngineUnavailable("boto3 is not installed; sync the pinned polly extra") from error
+            raise EngineUnavailable(
+                "boto3 is not installed; sync the pinned polly extra", "missing-dependency"
+            ) from error
         self.config = engine_config
         self.client = boto3.client("polly", region_name=region)
 

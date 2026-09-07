@@ -22,6 +22,22 @@ def fetch_engine(engine: str, config: dict[str, Any], model_dir: Path) -> list[P
     raise FetchError("Polly is a managed service and has no downloadable model artifact")
 
 
+def fetch_asr(config: dict[str, Any], destination: Path) -> list[Path]:
+    model = config["model"]
+    base = f"{model['url']}/resolve/{model['revision']}"
+    fetched: list[Path] = []
+    for artifact in model["artifacts"]:
+        local = destination / artifact["path"]
+        _download_verified(
+            f"{base}/{urllib.parse.quote(artifact['path'])}",
+            local,
+            artifact["checksum_algorithm"],
+            artifact["checksum"],
+        )
+        fetched.append(local)
+    return fetched
+
+
 def fetch_piper(engine: dict[str, Any], destination: Path) -> list[Path]:
     repository = engine["model_repository"]
     base = f"{repository['url']}/resolve/{repository['revision']}"

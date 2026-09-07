@@ -40,6 +40,40 @@ def file_digest(path: Path, algorithm: str = "sha256") -> str:
     return digest.hexdigest()
 
 
+def load_and_validate_asr_config(path: Path | None = None) -> dict[str, Any]:
+    config = load_json(path or ROOT / "config" / "asr.json")
+    if config.get("schema_version") != 1:
+        raise CatalogError("ASR schema_version must be 1")
+    dependency = config.get("dependency", {})
+    if not all(dependency.get(field) for field in ("name", "version", "source_url", "source_revision", "license")):
+        raise CatalogError("ASR dependency provenance is incomplete")
+    model = config.get("model", {})
+    if not all(model.get(field) for field in ("name", "url", "revision", "license")):
+        raise CatalogError("ASR model provenance is incomplete")
+    artifacts = model.get("artifacts")
+    if not isinstance(artifacts, list) or not artifacts:
+        raise CatalogError("ASR model artifacts are required")
+    for artifact in artifacts:
+        algorithm = artifact.get("checksum_algorithm")
+        checksum = artifact.get("checksum", "")
+        if not artifact.get("path") or algorithm != "sha256":
+            raise CatalogError("ASR artifact path/checksum algorithm is invalid")
+        if len(checksum) != 64:
+            raise CatalogError(f"ASR {artifact.get('path')} checksum is invalid")
+    if set(config.get("locale_mapping", {})) != set(REQUIRED_LOCALES):
+        raise CatalogError("ASR locale mapping must cover every required locale")
+    runtime = config.get("runtime", {})
+    if runtime != {
+        "device": "cpu",
+        "compute_type": "int8",
+        "beam_size": 5,
+        "temperature": 0.0,
+        "condition_on_previous_text": False,
+    }:
+        raise CatalogError("ASR runtime settings must match the deterministic evidence contract")
+    return config
+
+
 def load_and_validate_catalog(
     fixtures_path: Path | None = None, config_path: Path | None = None
 ) -> tuple[dict[str, Any], dict[str, Any]]:

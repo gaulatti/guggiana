@@ -12,6 +12,12 @@ checksums, voice provenance, and licenses. Generated models and WAV files are
 ignored. The result manifest, Markdown report, and blinded scoring sheet are
 the reviewable outputs.
 
+An optional pinned Faster-Whisper adapter adds local diagnostic WER/CER,
+missing-tail coverage, unexpected repeated spans, and fixture-specific
+number/date/currency/acronym/quotation checks. These metrics are never treated
+as human pronunciation or accent judgements and have no invented universal
+pass threshold. See the [locale/license approval worksheet](docs/locale-license-worksheet.md).
+
 ## Reproduce the dry run
 
 Use a clean CPython 3.11 environment. `uv.lock` freezes every optional engine
@@ -70,6 +76,38 @@ snapshot/reference and no explicit Polly network permission, those engines
 emit a structured `unavailable` record for every applicable fixture instead of
 silently disappearing.
 
+## Run local semantic diagnostics
+
+ASR dependency and model acquisition are both explicit. Ordinary validation
+does not import Faster-Whisper, open a socket, or download a model. The fetch
+command pins the repository revision and verifies SHA-256 for the model and
+every required metadata artifact before installation is considered usable.
+
+```sh
+UV_MANAGED_PYTHON=1 uv sync --frozen --project experiments/tts-bakeoff \
+  --python 3.11 --extra asr --extra piper --extra metrics
+UV_MANAGED_PYTHON=1 uv run --frozen --project experiments/tts-bakeoff \
+  python experiments/tts-bakeoff/run.py fetch \
+  --engine asr --allow-network
+UV_MANAGED_PYTHON=1 uv run --frozen --project experiments/tts-bakeoff \
+  python experiments/tts-bakeoff/run.py run \
+  --engine piper --engine chatterbox --engine polly --asr \
+  --piper-espeak-data-dir /short/path/espeak-ng-data \
+  --output experiments/tts-bakeoff/results/local.json \
+  --report experiments/tts-bakeoff/results/local.md \
+  --review-bundle experiments/tts-bakeoff/results/review-packets/local \
+  --review-key experiments/tts-bakeoff/review-keys/local.engine-key.json
+```
+
+The reviewer bundle contains randomized filenames, prompts, scoring
+instructions, and SHA-256 checksums. Its audio directory and the separately held
+engine key remain ignored. Every clip receives the same deterministic fixed-point
+gain transform before packaging, so no public checksum equals a source-artifact
+checksum. Never send the key to reviewers before scores are locked. The public
+reviewer manifest contains no engine, model, voice, source run, source filename,
+or source checksum field; the engine-identified result does not record a public
+packet checksum or path.
+
 ## Run Chatterbox or Polly deliberately
 
 Chatterbox acquisition is multi-gigabyte and explicit:
@@ -122,11 +160,16 @@ UV_MANAGED_PYTHON=1 uv run --frozen --project experiments/tts-bakeoff \
 - WAV decoding validates the declared PCM length, non-silent energy, duration,
   format, size, and checksum. Duration-target and exact repeated-window checks
   are alerts, not claims of semantic correctness.
-- Semantic truncation/repetition remains `unverified` without ASR transcript
-  comparison or human review. Optional ASR WER is explicitly `not-run`/null
-  when unavailable.
-- Give reviewers only the randomized-name WAV directory and blinded CSV. Keep
-  the engine-keyed manifest private until all scores are locked.
+- Objective audio, ASR semantic diagnostics, and human review have independent
+  states. `not-run`, `unavailable`, `failed`, `warning`, and `completed` are
+  never collapsed into a generic success. Transcripts are hashed, not recorded.
+- ASR WER/CER are edit-distance diagnostics after Unicode NFKC, case folding,
+  punctuation normalization, and locale-aware decimal/grouping normalization.
+  WER/CER alone never creates a warning threshold. Missing tails, unexpected
+  repeated spans, and missing fixture anchors are separately reported.
+- Give reviewers only the randomized-name WAV directory, public manifest,
+  instructions, checksums, and scores CSV. Keep the separately written engine
+  key private until all scores are locked.
 
 Reviewers score intelligibility, naturalness, cadence, pronunciation, and
 accent fit from 1–5. A replacement cannot be selected until every required
@@ -158,3 +201,23 @@ the objective results, and the [blinded sheet](results/m1-max-piper-2026-09-06.b
 is ready for human scoring. The WAV files remain untracked. Chatterbox and Polly
 are represented as structured unavailable results, so the committed decision is
 explicitly `no-selection`.
+
+[`results/m1-max-piper-asr-2026-09-06.json`](results/m1-max-piper-asr-2026-09-06.json)
+adds a fresh 20-fixture Piper run plus socket-denied local ASR on the same Apple
+M1 Max. All 20 Piper clips have objective and semantic diagnostic evidence: no
+synthesis/ASR failures, median WER `0.212437`, median CER `0.081752`, and no
+unexpected repeated spans. Seventeen records retain explicit diagnostic warnings
+for tail-token or fixture-anchor differences; they are not silently accepted or
+turned into an automatic rejection threshold. The [report](results/m1-max-piper-asr-2026-09-06.md)
+preserves the `no-selection` decision.
+
+The committed public files under
+[`results/review-packets/m1-max-local-tts-review-2026-09-06`](results/review-packets/m1-max-local-tts-review-2026-09-06)
+describe the 20 randomized clips, prompts, scoring rubric, and checksums without
+an engine/model/voice field, source run ID, source filename, or source checksum.
+Every candidate receives the same documented fixed-point PCM gain transform so
+public media checksums cannot be joined to engine-identified source evidence.
+Its `audio/` directory and the separately held engine key are intentionally
+untracked. The terminal machine state is
+`ready-for-human-review`; qualified scores, exact `es-US` judgement, and
+license/product approval remain human inputs.
