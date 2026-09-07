@@ -42,6 +42,15 @@ jobs:
           uv lock --check --project experiments/tts-bakeoff
           npm run test:tts-bakeoff
 
+      - name: Validate local synthesis worker package and offline lifecycle
+        run: |
+          npm run test:local-synthesis-worker
+          python -m compileall -q worker/local_synthesis worker/tests
+          uv build --project worker
+
+      - name: Build immutable local synthesis worker base image
+        run: docker build --file worker/Dockerfile --tag guggiana-local-synthesis:test worker
+
       - name: Run tests with coverage
         run: npm run test:coverage
 

@@ -57,9 +57,10 @@ specifics.
 
 1. **This change** — land the neutral contract, validation, and fake provider. No
    runtime change. *(current)*
-2. Add a local synthesis worker for the selected engine behind `SpeechProvider`,
-   evaluated offline against the fake-provider contract tests
-   (`gaulatti/guggiana#20`).
+2. **This change** — add an independently runnable, provider-neutral local
+   synthesis worker with pinned Piper and Chatterbox adapters, an injected fake
+   engine, and an explicit provider on every request (`gaulatti/guggiana#20`).
+   It is not wired to Step Functions and does not choose the production default.
 3. Add a Polly adapter implementing `SpeechProvider` over the existing
    `pre_polly` / `polly_wait` / `polly_listener` behaviour, with no state-machine
    change.
@@ -69,4 +70,6 @@ specifics.
    operational gates pass (`gaulatti/guggiana#21`); keep Polly IAM/callbacks
    until that has soaked.
 
-Steps 2–5 are separately tracked and blocked; each is its own PR.
+Steps 3–5 are separately tracked; each is its own PR. The default-provider
+cutover remains gated on human quality, exact-locale, license, and operational
+approval.

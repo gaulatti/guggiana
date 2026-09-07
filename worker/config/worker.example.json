@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "bindAddress": "127.0.0.1",
+  "port": 8787,
+  "stateDirectory": "/state",
+  "tokenFile": "/run/secrets/guggiana-worker-token",
+  "modelManifest": "/app/config/model-manifest.json",
+  "modelRoot": "/models",
+  "enabledProviders": ["piper"],
+  "providerOptions": {
+    "piper": {
+      "memoryLimitMiB": 768
+    },
+    "chatterbox": {
+      "memoryLimitMiB": 12288,
+      "device": "mps",
+      "voiceReferencePath": "/run/secrets/chatterbox-reference.wav",
+      "voiceReferenceSha256": "replace-with-approved-reference-sha256",
+      "voiceConsentId": "replace-with-opaque-consent-record-id"
+    }
+  },
+  "concurrency": 1,
+  "queueCapacity": 4,
+  "timeoutSeconds": 120,
+  "maxAttempts": 2,
+  "maxArtifactBytes": 268435456,
+  "maxRetainedJobs": 32
+}
