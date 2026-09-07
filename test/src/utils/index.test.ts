@@ -76,40 +76,44 @@ describe('excapeSSMLCharacters', () => {
 });
 
 describe('delay', () => {
-  it('should delay for the specified milliseconds', async () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  // Node timers use a monotonic clock, while Date.now() is wall-clock time.
+  // Measuring one with the other made CI occasionally report 999 ms for a
+  // correctly scheduled 1000 ms timer. Advance the timer source itself so the
+  // test asserts the actual scheduling contract at both boundaries.
+  it('should resolve after the specified milliseconds', async () => {
     const milliseconds = 2000;
-    const startTime = Date.now();
-    await delay(milliseconds);
-    const endTime = Date.now();
-    const elapsedTime = endTime - startTime;
-    expect(elapsedTime).toBeGreaterThanOrEqual(milliseconds);
+    const resolved = jest.fn();
+    const pending = delay(milliseconds).then(resolved);
+
+    expect(jest.getTimerCount()).toBe(1);
+    await jest.advanceTimersByTimeAsync(milliseconds - 1);
+    expect(resolved).not.toHaveBeenCalled();
+
+    await jest.advanceTimersByTimeAsync(1);
+    await pending;
+    expect(resolved).toHaveBeenCalledTimes(1);
   });
 
-  it('should delay for the default 1000 milliseconds if no value is provided', async () => {
+  it('should default to 1000 milliseconds', async () => {
     const milliseconds = 1000;
-    const startTime = Date.now();
-    await delay();
-    const endTime = Date.now();
-    const elapsedTime = endTime - startTime;
-    expect(elapsedTime).toBeGreaterThanOrEqual(milliseconds);
-  });
+    const resolved = jest.fn();
+    const pending = delay().then(resolved);
 
-  it('should delay for the specified milliseconds', async () => {
-    const milliseconds = 2000;
-    const startTime = Date.now();
-    await delay(milliseconds);
-    const endTime = Date.now();
-    const elapsedTime = endTime - startTime;
-    expect(elapsedTime).toBeGreaterThanOrEqual(milliseconds);
-  });
+    expect(jest.getTimerCount()).toBe(1);
+    await jest.advanceTimersByTimeAsync(milliseconds - 1);
+    expect(resolved).not.toHaveBeenCalled();
 
-  it('should delay for the default 1000 milliseconds if no value is provided', async () => {
-    const milliseconds = 1000;
-    const startTime = Date.now();
-    await delay();
-    const endTime = Date.now();
-    const elapsedTime = endTime - startTime;
-    expect(elapsedTime).toBeGreaterThanOrEqual(milliseconds);
+    await jest.advanceTimersByTimeAsync(1);
+    await pending;
+    expect(resolved).toHaveBeenCalledTimes(1);
   });
 });
 
