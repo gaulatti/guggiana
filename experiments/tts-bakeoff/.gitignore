@@ -6,5 +6,8 @@ artifacts/
 results/*.json
 results/*.csv
 results/process-cold/
+results/review-packets/*/audio/
+review-keys/
 !results/m1-max-piper-2026-09-06.json
 !results/m1-max-piper-2026-09-06.blinded.csv
+!results/m1-max-piper-asr-2026-09-06.json

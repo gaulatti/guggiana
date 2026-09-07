@@ -4,10 +4,12 @@ import argparse
 import json
 from pathlib import Path
 
-from .catalog import ROOT, load_and_validate_catalog
-from .fetch import fetch_engine
+from .catalog import ROOT, load_and_validate_asr_config, load_and_validate_catalog
+from .fetch import fetch_asr, fetch_engine
+from .review import write_review_bundle
 from .runner import (
     combine_process_cold_manifests,
+    evidence_readiness,
     render_report,
     run_bakeoff,
     write_blinded_sheet,
@@ -22,7 +24,7 @@ def parser() -> argparse.ArgumentParser:
     subcommands.add_parser("validate", help="validate fixtures and immutable provenance")
 
     fetch = subcommands.add_parser("fetch", help="explicitly download pinned local models")
-    fetch.add_argument("--engine", choices=("piper", "chatterbox"), required=True)
+    fetch.add_argument("--engine", choices=("piper", "chatterbox", "asr"), required=True)
     fetch.add_argument("--model-dir", type=Path, default=ROOT / "models")
     fetch.add_argument("--allow-network", action="store_true")
 
@@ -46,6 +48,10 @@ def parser() -> argparse.ArgumentParser:
     run.add_argument("--seed", type=int, default=20260906)
     run.add_argument("--piper-espeak-data-dir", type=Path)
     run.add_argument("--fixture-id", action="append", dest="fixture_ids")
+    run.add_argument("--asr", action="store_true", help="run the pinned local ASR diagnostics")
+    run.add_argument("--asr-model-dir", type=Path, default=ROOT / "models" / "asr")
+    run.add_argument("--review-bundle", type=Path)
+    run.add_argument("--review-key", type=Path)
 
     score = subcommands.add_parser("score-sheet", help="create a blinded sheet from a manifest")
     score.add_argument("manifest", type=Path)
@@ -68,13 +74,18 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     fixtures, config = load_and_validate_catalog()
+    asr_config = load_and_validate_asr_config()
     if args.command == "validate":
-        print("valid: 20 fixtures, 5 locales, 3 pinned engines")
+        print("valid: 20 fixtures, 5 locales, 3 pinned engines, 1 pinned local ASR adapter")
         return 0
     if args.command == "fetch":
         if not args.allow_network:
             raise SystemExit("fetch refused: pass --allow-network to acknowledge model downloads")
-        fetched = fetch_engine(args.engine, config, args.model_dir)
+        fetched = (
+            fetch_asr(asr_config, args.model_dir / "asr")
+            if args.engine == "asr"
+            else fetch_engine(args.engine, config, args.model_dir)
+        )
         print(f"verified {len(fetched)} {args.engine} artifacts under {args.model_dir}")
         return 0
     if args.command == "run":
@@ -83,6 +94,8 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("networked Polly runs require an explicit --region")
         if "chatterbox" in engines and args.voice_reference and not args.voice_reference_id:
             raise SystemExit("Chatterbox voice references require an opaque --voice-reference-id")
+        if bool(args.review_bundle) != bool(args.review_key):
+            raise SystemExit("--review-bundle and --review-key must be supplied together")
         manifest = run_bakeoff(
             fixtures,
             config,
@@ -97,7 +110,18 @@ def main(argv: list[str] | None = None) -> int:
             seed=args.seed,
             piper_espeak_data_dir=args.piper_espeak_data_dir,
             fixture_ids=set(args.fixture_ids) if args.fixture_ids else None,
+            asr_config=asr_config if args.asr else None,
+            asr_model_dir=args.asr_model_dir if args.asr else None,
         )
+        if args.review_bundle and args.review_key:
+            manifest["review_packet"] = write_review_bundle(
+                manifest,
+                fixtures,
+                args.artifacts_dir,
+                args.review_bundle,
+                args.review_key,
+            )
+            manifest["evidence_readiness"] = evidence_readiness(manifest)
         write_manifest(manifest, args.output)
         if args.score_sheet:
             write_blinded_sheet(manifest, args.score_sheet)
