@@ -25,8 +25,8 @@ The repository includes the following features:
 
 ## 📋 Requirements
 Before using this repository, ensure you have the following:
-- **Node.js** (>= 14.x)
-- **AWS CDK** (>= 2.x)
+- **Node.js** 22.x (the version used by CI)
+- The repository's locked **AWS CDK CLI** (`npm ci` installs it; use `npx cdk`)
 - **AWS Account** with permissions to use:
   - S3
   - DynamoDB
@@ -45,23 +45,23 @@ Follow these steps to set up the project:
    git clone https://github.com/gaulatti/guggiana.git
    cd guggiana
    ```
-2. Install dependencies:
+2. Install the exact dependency set, including the compatible CDK CLI:
    ```bash
-   npm install
+   npm ci
    ```
 3. Bootstrap AWS CDK:
    ```bash
-   cdk bootstrap
+   npx cdk bootstrap
    ```
 
 ---
 
 ## 🚀 Usage
 ### Deploying the Stack
-To deploy the infrastructure:
-```bash
-cdk deploy
-```
+Do not deploy from an unreviewed checkout. Follow the
+[deployment runbook](docs/deployment-runbook.md) to pin the source revision,
+inspect the exact account and Region, run the full validation and CDK diff, and
+capture post-deployment evidence. A deployment requires explicit authorization.
 
 ### Running Locally
 You can test individual Lambda functions locally using AWS SAM CLI:
