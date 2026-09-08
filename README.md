@@ -16,6 +16,7 @@ The repository includes the following features:
 - **SSML Support**: Prepares text in SSML (Speech Synthesis Markup Language) for enhanced audio quality.
 - **Provider-neutral speech contract**: `src/domain/speech/` defines the speech domain (locales, semantic voice roles, plain-text segments, explicit pauses, PCM output, job states, pinned artifact metadata) independently of Polly, with validation and a deterministic fake provider. It is not wired into the deployed workflow. See [`docs/speech-synthesis-contract.md`](docs/speech-synthesis-contract.md).
 - **Multilingual TTS bake-off**: `experiments/tts-bakeoff/` provides a pinned, standalone Chatterbox/Piper/Polly comparison with 20 fixtures, optional fully local ASR diagnostics, explicit evidence states, objective M1 metrics, and a checksummed randomized reviewer packet. It does not import or change production code. See the [experiment guide](experiments/tts-bakeoff/README.md).
+- **Optional local synthesis worker**: `worker/` packages pinned Chatterbox and Piper adapters behind a bounded asynchronous submit/status/artifact API with durable job state, PCM normalization, cancellation, retries, health, readiness, and private metrics. Provider selection remains explicit per request and the worker is not wired into production. See the [worker runbook](worker/README.md).
 - **AWS Step Functions**: Orchestrates workflows for tasks such as translation, speech synthesis, and merging audio.
 - **DynamoDB Integration**: Stores metadata and processing statuses for content.
 - **S3 Storage**: Manages audio files in S3 for easy accessibility.
@@ -84,6 +85,12 @@ Run the offline TTS bake-off contract tests:
 
 ```bash
 npm run test:tts-bakeoff
+```
+
+Run the local worker's offline fake-engine lifecycle and protocol tests:
+
+```bash
+npm run test:local-synthesis-worker
 ```
 
 For private repositories, configure `CODECOV_TOKEN` in GitHub repository secrets if your Codecov setup requires it.

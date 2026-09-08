@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-06",
+  "providers": {
+    "piper": {
+      "model": "piper-voices",
+      "modelRevision": "375a0fe641dea077c2a47b4e9a056d6da521eed3",
+      "runtimeRevision": "639388b6317fc4731e91d53da42aea68fd4166ff",
+      "runtimeLicense": "GPL-3.0-or-later",
+      "voiceProvenance": "Per-locale Piper voice and dataset license pinned below; es-US intentionally uses an es-MX comparator and is not an accent approval.",
+      "importName": "piper",
+      "dependency": {
+        "distribution": "piper-tts",
+        "version": "1.8.0",
+        "wheelSha256": "33e7425933e9290fe651ae127916ed1ca6104cfa3d94e9049295dd3a5c449382"
+      },
+      "locales": {
+        "en-US": {
+          "voice": "en_US-ljspeech-high",
+          "datasetLicense": "Public domain",
+          "modelPath": "en/en_US/ljspeech/high/en_US-ljspeech-high.onnx",
+          "configPath": "en/en_US/ljspeech/high/en_US-ljspeech-high.onnx.json",
+          "sampleRateHz": 22050
+        },
+        "es-US": {
+          "voice": "es_MX-claude-high",
+          "datasetLicense": "Apache-2.0; es-MX comparator only",
+          "modelPath": "es/es_MX/claude/high/es_MX-claude-high.onnx",
+          "configPath": "es/es_MX/claude/high/es_MX-claude-high.onnx.json",
+          "sampleRateHz": 22050
+        },
+        "fr-FR": {
+          "voice": "fr_FR-siwis-medium",
+          "datasetLicense": "CC-BY-4.0",
+          "modelPath": "fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx",
+          "configPath": "fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx.json",
+          "sampleRateHz": 22050
+        },
+        "de-DE": {
+          "voice": "de_DE-thorsten-high",
+          "datasetLicense": "CC0-1.0",
+          "modelPath": "de/de_DE/thorsten/high/de_DE-thorsten-high.onnx",
+          "configPath": "de/de_DE/thorsten/high/de_DE-thorsten-high.onnx.json",
+          "sampleRateHz": 22050
+        },
+        "pt-BR": {
+          "voice": "pt_BR-faber-medium",
+          "datasetLicense": "CC0-1.0",
+          "modelPath": "pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx",
+          "configPath": "pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx.json",
+          "sampleRateHz": 22050
+        }
+      },
+      "artifacts": [
+        {"path": "en/en_US/ljspeech/high/en_US-ljspeech-high.onnx", "algorithm": "sha256", "checksum": "5d4f08ba6a2a48c44592eed3ce56bf85e9de3dd4e20df90541ae68a8310c029a"},
+        {"path": "en/en_US/ljspeech/high/en_US-ljspeech-high.onnx.json", "algorithm": "md5", "checksum": "de98fc398ddead60fb82d93bfafb3ad1"},
+        {"path": "en/en_US/ljspeech/high/MODEL_CARD", "algorithm": "md5", "checksum": "59322a9a8d2c0e556f0be1171cd54ea7"},
+        {"path": "es/es_MX/claude/high/es_MX-claude-high.onnx", "algorithm": "sha256", "checksum": "3ef40a71ea63852cd8ab7e6fa7d2ecdcfa67a0b47c9c48e3f10e02ee02083ea0"},
+        {"path": "es/es_MX/claude/high/es_MX-claude-high.onnx.json", "algorithm": "md5", "checksum": "36882201922fabb409f18d284af3eddd"},
+        {"path": "es/es_MX/claude/high/MODEL_CARD", "algorithm": "md5", "checksum": "bca99dc9b9a6c8f2f8563d73d52c4a3b"},
+        {"path": "fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx", "algorithm": "sha256", "checksum": "641d1ab097da2b81128c076810edb052b385decc8be3381814802a64a73baf99"},
+        {"path": "fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx.json", "algorithm": "md5", "checksum": "a407e7e6901feb79c2ea2a5466076cce"},
+        {"path": "fr/fr_FR/siwis/medium/MODEL_CARD", "algorithm": "md5", "checksum": "2b9ea48b15e9e1fd25f95b415caaf66f"},
+        {"path": "de/de_DE/thorsten/high/de_DE-thorsten-high.onnx", "algorithm": "sha256", "checksum": "9df1c43c61149ef9b39e618e2b861fbe41e1fcea9390b2dac62e8761573ea4f1"},
+        {"path": "de/de_DE/thorsten/high/de_DE-thorsten-high.onnx.json", "algorithm": "md5", "checksum": "e81686e00a9d825e2488ead660bec6fd"},
+        {"path": "de/de_DE/thorsten/high/MODEL_CARD", "algorithm": "md5", "checksum": "582a051328d56a564e8a38c9029ae630"},
+        {"path": "pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx", "algorithm": "sha256", "checksum": "858555e3a064209c57088fe6bd70c4c3dc54d03eaa00c45d5ecaf43a33f95aa7"},
+        {"path": "pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx.json", "algorithm": "md5", "checksum": "a1258e1e113c47d9a1486a9bef1daab4"},
+        {"path": "pt/pt_BR/faber/medium/MODEL_CARD", "algorithm": "md5", "checksum": "a81a3840b1749cf34b0e31de1577ef47"}
+      ]
+    },
+    "chatterbox": {
+      "model": "multilingual-v3",
+      "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+      "runtimeRevision": "5de7a54aa4e5e2baadb0182dde554908b48b85c2",
+      "runtimeLicense": "MIT",
+      "voiceProvenance": "A checksummed local reference with a separately retained consent record is mandatory; PerTh watermarking remains enabled.",
+      "checkpointDirectory": "multilingual-v3",
+      "checkpointFile": "t3_mtl23ls_v3.safetensors",
+      "importName": "chatterbox",
+      "dependency": {
+        "distribution": "chatterbox-tts",
+        "version": "0.1.7",
+        "wheelSha256": "83782500e3ad4e7c919132e9d7eb8755f29f57c5bde5ec48c655ca23a4eb113c"
+      },
+      "locales": {
+        "en-US": {"languageId": "en", "datasetLicense": "MIT model; generic language ID only"},
+        "es-US": {"languageId": "es", "datasetLicense": "MIT model; no exact es-US accent evidence"},
+        "fr-FR": {"languageId": "fr", "datasetLicense": "MIT model; generic language ID only"},
+        "de-DE": {"languageId": "de", "datasetLicense": "MIT model; generic language ID only"},
+        "pt-BR": {"languageId": "pt", "datasetLicense": "MIT model; generic language ID only"}
+      },
+      "artifacts": [
+        {"path": "multilingual-v3/ve.pt", "algorithm": "sha256", "checksum": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"},
+        {"path": "multilingual-v3/s3gen.pt", "algorithm": "sha256", "checksum": "9b9ff07e60b20c136e2b1b3d7563a24604e8d2c4c267888d1ee929dd0151d2a3"},
+        {"path": "multilingual-v3/grapheme_mtl_merged_expanded_v1.json", "algorithm": "sha256", "checksum": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"},
+        {"path": "multilingual-v3/t3_mtl23ls_v3.safetensors", "algorithm": "sha256", "checksum": "5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953"}
+      ]
+    }
+  }
+}
