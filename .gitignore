@@ -7,3 +7,9 @@ node_modules
 .cdk.staging
 cdk.out
 coverage
+
+# Local synthesis worker build/runtime artifacts
+worker/build/
+worker/dist/
+worker/*.egg-info/
+worker/**/__pycache__/

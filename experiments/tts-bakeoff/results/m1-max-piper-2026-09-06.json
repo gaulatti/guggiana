@@ -1,0 +1,2488 @@
+{
+  "schema_version": 1,
+  "run_id": "603eb8ebe32a1c86",
+  "generated_at": "2026-09-06T19:14:45.813039+00:00",
+  "fixtures_sha256": "6230be1c1ef90a89ef9135064529a0f4143912d9b135251e62e6e6c9f60a9af2",
+  "engine_config_sha256": "dfc48da9450f3ad261587a5a01627f556e3383e5f696cae0eb2b01b8626a9f0d",
+  "host": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "model": "MacBookPro18,4",
+    "chip": "Apple M1 Max",
+    "logical_cpu_count": 10,
+    "memory_bytes": 68719476736,
+    "python": "3.11.15"
+  },
+  "measurement": {
+    "clock": "time.perf_counter_ns",
+    "cold_load": "fresh CPython process and fresh engine/model load for every successful fixture; OS filesystem caches were not purged",
+    "peak_memory": "per-process 10 ms RSS sampling with pinned psutil",
+    "rtf": "synthesis_seconds divided by WAV duration_seconds",
+    "semantic_integrity": "unverified unless ASR or blinded human scores are supplied",
+    "mps_determinism": "seeded, but exact reproducibility is not guaranteed by the MPS backend"
+  },
+  "execution": {
+    "device": "cpu",
+    "seed": 20260906,
+    "network_enabled": false,
+    "aws_region": null,
+    "voice_reference_id": null,
+    "voice_reference_path_recorded": false,
+    "process_cold": true,
+    "piper_espeak_data_override": true,
+    "installed_distributions": {
+      "piper-tts": "1.8.0",
+      "chatterbox-tts": null,
+      "boto3": null,
+      "psutil": "7.2.2"
+    },
+    "source_processes": 21
+  },
+  "requested_engines": [
+    "piper",
+    "chatterbox",
+    "polly"
+  ],
+  "engine_provenance": {
+    "piper": {
+      "dependency": {
+        "name": "piper-tts",
+        "version": "1.8.0",
+        "macos_arm64_wheel_sha256": "33e7425933e9290fe651ae127916ed1ca6104cfa3d94e9049295dd3a5c449382",
+        "license": "GPL-3.0-or-later"
+      },
+      "source": {
+        "url": "https://github.com/OHF-Voice/piper1-gpl",
+        "revision": "639388b6317fc4731e91d53da42aea68fd4166ff",
+        "license": "GPL-3.0-or-later"
+      },
+      "model_repository": {
+        "url": "https://huggingface.co/rhasspy/piper-voices",
+        "revision": "375a0fe641dea077c2a47b4e9a056d6da521eed3",
+        "license": "per-voice; see each model card"
+      },
+      "locale_mapping": {
+        "en-US": {
+          "voice": "en_US-ljspeech-high",
+          "path": "en/en_US/ljspeech/high/en_US-ljspeech-high.onnx",
+          "model_md5": "dad093b5d2cff6a5fda99883ceda09d1",
+          "model_sha256": "5d4f08ba6a2a48c44592eed3ce56bf85e9de3dd4e20df90541ae68a8310c029a",
+          "config_md5": "de98fc398ddead60fb82d93bfafb3ad1",
+          "model_card_md5": "59322a9a8d2c0e556f0be1171cd54ea7",
+          "dataset_license": "Public domain",
+          "accent_evidence": "exact en-US locale tag"
+        },
+        "es-US": {
+          "voice": "es_MX-claude-high",
+          "path": "es/es_MX/claude/high/es_MX-claude-high.onnx",
+          "model_md5": "cb1966e0ff20ca3aa010f6c9a0ce296a",
+          "model_sha256": "3ef40a71ea63852cd8ab7e6fa7d2ecdcfa67a0b47c9c48e3f10e02ee02083ea0",
+          "config_md5": "36882201922fabb409f18d284af3eddd",
+          "model_card_md5": "bca99dc9b9a6c8f2f8563d73d52c4a3b",
+          "dataset_license": "Apache-2.0",
+          "accent_evidence": "es-MX comparator only; no exact es-US voice"
+        },
+        "fr-FR": {
+          "voice": "fr_FR-siwis-medium",
+          "path": "fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx",
+          "model_md5": "20e876e8c839e9b11a26085858f2300c",
+          "model_sha256": "641d1ab097da2b81128c076810edb052b385decc8be3381814802a64a73baf99",
+          "config_md5": "a407e7e6901feb79c2ea2a5466076cce",
+          "model_card_md5": "2b9ea48b15e9e1fd25f95b415caaf66f",
+          "dataset_license": "CC-BY-4.0",
+          "accent_evidence": "exact fr-FR locale tag"
+        },
+        "de-DE": {
+          "voice": "de_DE-thorsten-high",
+          "path": "de/de_DE/thorsten/high/de_DE-thorsten-high.onnx",
+          "model_md5": "256505fe58fb8b9d6ed78b83f6b8a9d2",
+          "model_sha256": "9df1c43c61149ef9b39e618e2b861fbe41e1fcea9390b2dac62e8761573ea4f1",
+          "config_md5": "e81686e00a9d825e2488ead660bec6fd",
+          "model_card_md5": "582a051328d56a564e8a38c9029ae630",
+          "dataset_license": "CC0-1.0",
+          "accent_evidence": "exact de-DE locale tag"
+        },
+        "pt-BR": {
+          "voice": "pt_BR-faber-medium",
+          "path": "pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx",
+          "model_md5": "e0724a2f07965f6523d2a1e96b488a4c",
+          "model_sha256": "858555e3a064209c57088fe6bd70c4c3dc54d03eaa00c45d5ecaf43a33f95aa7",
+          "config_md5": "a1258e1e113c47d9a1486a9bef1daab4",
+          "model_card_md5": "a81a3840b1749cf34b0e31de1577ef47",
+          "dataset_license": "CC0-1.0",
+          "accent_evidence": "exact pt-BR locale tag"
+        }
+      },
+      "network_policy": "Models must be explicitly fetched from the pinned revision and checksum-verified before synthesis."
+    },
+    "chatterbox": {
+      "dependency": {
+        "name": "chatterbox-tts",
+        "version": "0.1.7",
+        "wheel_sha256": "83782500e3ad4e7c919132e9d7eb8755f29f57c5bde5ec48c655ca23a4eb113c",
+        "license": "MIT"
+      },
+      "source": {
+        "url": "https://github.com/resemble-ai/chatterbox",
+        "revision": "5de7a54aa4e5e2baadb0182dde554908b48b85c2",
+        "license": "MIT"
+      },
+      "models": {
+        "multilingual-v3": {
+          "url": "https://huggingface.co/ResembleAI/chatterbox",
+          "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+          "file": "t3_mtl23ls_v3.safetensors",
+          "sha256": "5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953",
+          "license": "MIT",
+          "benchmark_status": "general comparator selected for the executable harness",
+          "required_files": [
+            {
+              "repository": "ResembleAI/chatterbox",
+              "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+              "source_file": "ve.pt",
+              "local_file": "ve.pt",
+              "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"
+            },
+            {
+              "repository": "ResembleAI/chatterbox",
+              "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+              "source_file": "s3gen.pt",
+              "local_file": "s3gen.pt",
+              "sha256": "9b9ff07e60b20c136e2b1b3d7563a24604e8d2c4c267888d1ee929dd0151d2a3"
+            },
+            {
+              "repository": "ResembleAI/chatterbox",
+              "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+              "source_file": "grapheme_mtl_merged_expanded_v1.json",
+              "local_file": "grapheme_mtl_merged_expanded_v1.json",
+              "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"
+            },
+            {
+              "repository": "ResembleAI/chatterbox",
+              "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+              "source_file": "t3_mtl23ls_v3.safetensors",
+              "local_file": "t3_mtl23ls_v3.safetensors",
+              "sha256": "5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953"
+            }
+          ],
+          "voice_provenance": "Zero-shot voice cloning; a user-supplied reference clip is required and must have recorded consent and usage rights."
+        },
+        "es-mx-latam": {
+          "url": "https://huggingface.co/ResembleAI/Chatterbox-Multilingual-es-mx-latam",
+          "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7",
+          "file": "t3_es_mx_latam.safetensors",
+          "sha256": "c66c4517f11c2b35a56e28615c0689deb864cbc411e329552223bbd0a6a063f8",
+          "license": "MIT",
+          "benchmark_status": "provenance-only regional candidate; no released pinned loader contract beyond the companion-asset note",
+          "required_files": [
+            {
+              "repository": "ResembleAI/chatterbox",
+              "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+              "source_file": "ve.pt",
+              "local_file": "ve.pt",
+              "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"
+            },
+            {
+              "repository": "ResembleAI/Chatterbox-Multilingual-es-mx-latam",
+              "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7",
+              "source_file": "s3gen_v3.pt",
+              "local_file": "s3gen.pt",
+              "sha256": "f7abce4b196dae2d08d9296cbebc6521b046079577643b42a19a03499d08721e"
+            },
+            {
+              "repository": "ResembleAI/Chatterbox-Multilingual-es-mx-latam",
+              "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7",
+              "source_file": "grapheme_mtl_merged_expanded_v1.json",
+              "local_file": "grapheme_mtl_merged_expanded_v1.json",
+              "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"
+            },
+            {
+              "repository": "ResembleAI/Chatterbox-Multilingual-es-mx-latam",
+              "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7",
+              "source_file": "t3_es_mx_latam.safetensors",
+              "local_file": "t3_es_mx_latam.safetensors",
+              "sha256": "c66c4517f11c2b35a56e28615c0689deb864cbc411e329552223bbd0a6a063f8"
+            }
+          ],
+          "voice_provenance": "Latin-American Spanish regional checkpoint; not evidence of an es-US accent. PerTh watermarking remains enabled by the runtime."
+        },
+        "pt-br": {
+          "url": "https://huggingface.co/ResembleAI/Chatterbox-Multilingual-pt-br",
+          "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d",
+          "file": "t3_pt_br.safetensors",
+          "sha256": "074aaf65255eb9cb960288f7cc72e09d3b5008f6e0b14868c0d4e5b0bd7cbb6c",
+          "license": "MIT",
+          "benchmark_status": "provenance-only regional candidate; no released pinned loader contract beyond the companion-asset note",
+          "required_files": [
+            {
+              "repository": "ResembleAI/chatterbox",
+              "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+              "source_file": "ve.pt",
+              "local_file": "ve.pt",
+              "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"
+            },
+            {
+              "repository": "ResembleAI/Chatterbox-Multilingual-pt-br",
+              "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d",
+              "source_file": "s3gen_v3.pt",
+              "local_file": "s3gen.pt",
+              "sha256": "f7abce4b196dae2d08d9296cbebc6521b046079577643b42a19a03499d08721e"
+            },
+            {
+              "repository": "ResembleAI/Chatterbox-Multilingual-pt-br",
+              "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d",
+              "source_file": "grapheme_mtl_merged_expanded_v1.json",
+              "local_file": "grapheme_mtl_merged_expanded_v1.json",
+              "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"
+            },
+            {
+              "repository": "ResembleAI/Chatterbox-Multilingual-pt-br",
+              "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d",
+              "source_file": "t3_pt_br.safetensors",
+              "local_file": "t3_pt_br.safetensors",
+              "sha256": "074aaf65255eb9cb960288f7cc72e09d3b5008f6e0b14868c0d4e5b0bd7cbb6c"
+            }
+          ],
+          "voice_provenance": "Brazilian Portuguese regional checkpoint; reference-voice consent is still required and PerTh watermarking remains enabled."
+        }
+      },
+      "locale_mapping": {
+        "en-US": {
+          "language_id": "en",
+          "model": "multilingual-v3",
+          "accent_evidence": "generic language ID only"
+        },
+        "es-US": {
+          "language_id": "es",
+          "model": "multilingual-v3",
+          "accent_evidence": "generic es language ID only; the cataloged es-MX pack is provenance-only and is not exact es-US evidence"
+        },
+        "fr-FR": {
+          "language_id": "fr",
+          "model": "multilingual-v3",
+          "accent_evidence": "generic language ID only"
+        },
+        "de-DE": {
+          "language_id": "de",
+          "model": "multilingual-v3",
+          "accent_evidence": "generic language ID only"
+        },
+        "pt-BR": {
+          "language_id": "pt",
+          "model": "multilingual-v3",
+          "accent_evidence": "generic pt language ID; the cataloged regional pack remains provenance-only until its loader contract is independently verified"
+        }
+      },
+      "network_policy": "Runner accepts only a pre-fetched local snapshot and calls from_local; it never follows upstream's floating main revision."
+    },
+    "polly": {
+      "dependency": {
+        "name": "boto3",
+        "version": "1.43.89",
+        "wheel_sha256": "fe4190afe63eb562b6ba6a3911cf4427473b35fa047adde093bf696d3ae09fc0",
+        "license": "Apache-2.0"
+      },
+      "source": {
+        "url": "https://docs.aws.amazon.com/polly/latest/dg/available-voices.html",
+        "revision": "AWS-managed-service-observed-2026-09-06",
+        "license": "AWS service terms; review required"
+      },
+      "model": {
+        "artifact_checksum": null,
+        "checksum_status": "not published for the managed neural service",
+        "voice_provenance": "AWS-managed named neural voices"
+      },
+      "locale_mapping": {
+        "en-US": {
+          "voice": "Joanna",
+          "engine": "neural",
+          "accent_evidence": "AWS en-US voice"
+        },
+        "es-US": {
+          "voice": "Lupe",
+          "engine": "neural",
+          "accent_evidence": "AWS es-US voice"
+        },
+        "fr-FR": {
+          "voice": "Lea",
+          "engine": "neural",
+          "accent_evidence": "AWS fr-FR voice"
+        },
+        "de-DE": {
+          "voice": "Vicki",
+          "engine": "neural",
+          "accent_evidence": "AWS de-DE voice"
+        },
+        "pt-BR": {
+          "voice": "Camila",
+          "engine": "neural",
+          "accent_evidence": "AWS pt-BR voice"
+        }
+      },
+      "network_policy": "Disabled unless --allow-network is supplied; credentials, cost, and service terms remain operator responsibilities."
+    }
+  },
+  "records": [
+    {
+      "engine": "piper",
+      "fixture_id": "de-DE-acronyms-quotations",
+      "locale": "de-DE",
+      "category": "acronyms-quotations",
+      "blind_id": "321c2c4b2e94",
+      "status": "succeeded",
+      "failure": null,
+      "model": "de_DE-thorsten-high",
+      "voice": "de_DE-thorsten-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.703166,
+      "synthesis_seconds": 2.189368,
+      "peak_rss_mib": 373.984,
+      "incremental_peak_rss_mib": 314.766,
+      "rtf": 0.278547,
+      "audio": {
+        "duration_seconds": 7.859955,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 173312,
+        "size_bytes": 346668,
+        "sha256": "fbe89bad37470bfdc6fbc0947d1b827d557fcf9244f204566a0afee622602dae",
+        "signal": {
+          "rms": 4776.336,
+          "clipping_fraction": 1.154e-05,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 15,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "321c2c4b2e94.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "de-DE-headline-byline",
+      "locale": "de-DE",
+      "category": "headline-byline",
+      "blind_id": "b520af4bc5aa",
+      "status": "succeeded",
+      "failure": null,
+      "model": "de_DE-thorsten-high",
+      "voice": "de_DE-thorsten-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.784519,
+      "synthesis_seconds": 1.74814,
+      "peak_rss_mib": 401.062,
+      "incremental_peak_rss_mib": 341.844,
+      "rtf": 0.315665,
+      "audio": {
+        "duration_seconds": 5.537959,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 122112,
+        "size_bytes": 244268,
+        "sha256": "c3d58e462eb3cf2cea56002d8555b281d218daac856dc8506c8b777c43526388",
+        "signal": {
+          "rms": 4515.76,
+          "clipping_fraction": 8.19e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 11,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "b520af4bc5aa.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "de-DE-long-form",
+      "locale": "de-DE",
+      "category": "long-form",
+      "blind_id": "4db68c455a71",
+      "status": "succeeded",
+      "failure": null,
+      "model": "de_DE-thorsten-high",
+      "voice": "de_DE-thorsten-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.736298,
+      "synthesis_seconds": 13.224542,
+      "peak_rss_mib": 525.828,
+      "incremental_peak_rss_mib": 466.312,
+      "rtf": 0.282928,
+      "audio": {
+        "duration_seconds": 46.741769,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 1030656,
+        "size_bytes": 2061356,
+        "sha256": "0414920715735ce5edbe332acaf8fc4cae1c4740b713d0d85fd804773e047c59",
+        "signal": {
+          "rms": 5224.865,
+          "clipping_fraction": 5.82e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "within-target",
+          "outside_target": false
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 93,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "4db68c455a71.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "de-DE-numbers-dates-currency",
+      "locale": "de-DE",
+      "category": "numbers-dates-currency",
+      "blind_id": "15166d9403ea",
+      "status": "succeeded",
+      "failure": null,
+      "model": "de_DE-thorsten-high",
+      "voice": "de_DE-thorsten-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.741071,
+      "synthesis_seconds": 3.374486,
+      "peak_rss_mib": 525.969,
+      "incremental_peak_rss_mib": 466.828,
+      "rtf": 0.289208,
+      "audio": {
+        "duration_seconds": 11.668027,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 257280,
+        "size_bytes": 514604,
+        "sha256": "154fee03b3fbece4b4330ce4d1731f67744c81adc000ac9fad65dd8800155d4c",
+        "signal": {
+          "rms": 5093.826,
+          "clipping_fraction": 7.77e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 23,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "15166d9403ea.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "en-US-acronyms-quotations",
+      "locale": "en-US",
+      "category": "acronyms-quotations",
+      "blind_id": "9ec2d0aea26a",
+      "status": "succeeded",
+      "failure": null,
+      "model": "en_US-ljspeech-high",
+      "voice": "en_US-ljspeech-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.794503,
+      "synthesis_seconds": 1.915849,
+      "peak_rss_mib": 377.016,
+      "incremental_peak_rss_mib": 317.766,
+      "rtf": 0.253094,
+      "audio": {
+        "duration_seconds": 7.569705,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 166912,
+        "size_bytes": 333868,
+        "sha256": "1308c5df3681866385b2e67489345f0aeb44033a0e93c7d22de153d9b517c577",
+        "signal": {
+          "rms": 4877.167,
+          "clipping_fraction": 1.198e-05,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 15,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "9ec2d0aea26a.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "en-US-headline-byline",
+      "locale": "en-US",
+      "category": "headline-byline",
+      "blind_id": "979a8b3ffa06",
+      "status": "succeeded",
+      "failure": null,
+      "model": "en_US-ljspeech-high",
+      "voice": "en_US-ljspeech-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.800669,
+      "synthesis_seconds": 1.50451,
+      "peak_rss_mib": 425.156,
+      "incremental_peak_rss_mib": 364.891,
+      "rtf": 0.231407,
+      "audio": {
+        "duration_seconds": 6.501587,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 143360,
+        "size_bytes": 286764,
+        "sha256": "e6a4fa8813f673c19796afeb091159ee112a3e5e134316e853d6873554d2d4e4",
+        "signal": {
+          "rms": 4074.546,
+          "clipping_fraction": 6.98e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 13,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "979a8b3ffa06.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "en-US-long-form",
+      "locale": "en-US",
+      "category": "long-form",
+      "blind_id": "a975dfd4cbf1",
+      "status": "succeeded",
+      "failure": null,
+      "model": "en_US-ljspeech-high",
+      "voice": "en_US-ljspeech-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.838704,
+      "synthesis_seconds": 13.188019,
+      "peak_rss_mib": 496.484,
+      "incremental_peak_rss_mib": 437.359,
+      "rtf": 0.269495,
+      "audio": {
+        "duration_seconds": 48.936054,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 1079040,
+        "size_bytes": 2158124,
+        "sha256": "90ae7aa94f09db42f182b2a6c681e6dd4e4c6a31937f7fa288adb15b0f1a5b7f",
+        "signal": {
+          "rms": 3791.871,
+          "clipping_fraction": 6.49e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "within-target",
+          "outside_target": false
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 97,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "a975dfd4cbf1.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "en-US-numbers-dates-currency",
+      "locale": "en-US",
+      "category": "numbers-dates-currency",
+      "blind_id": "91a7abd40b34",
+      "status": "succeeded",
+      "failure": null,
+      "model": "en_US-ljspeech-high",
+      "voice": "en_US-ljspeech-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.800311,
+      "synthesis_seconds": 2.715317,
+      "peak_rss_mib": 546.984,
+      "incremental_peak_rss_mib": 487.656,
+      "rtf": 0.221475,
+      "audio": {
+        "duration_seconds": 12.260136,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 270336,
+        "size_bytes": 540716,
+        "sha256": "fddfd55a94a43ce4e7ad40a62f043225a5f7db68f8cde5d282aadf3cfbf03024",
+        "signal": {
+          "rms": 4187.426,
+          "clipping_fraction": 3.7e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 24,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "91a7abd40b34.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "es-US-acronyms-quotations",
+      "locale": "es-US",
+      "category": "acronyms-quotations",
+      "blind_id": "d85afa99874d",
+      "status": "succeeded",
+      "failure": null,
+      "model": "es_MX-claude-high",
+      "voice": "es_MX-claude-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.519785,
+      "synthesis_seconds": 0.375977,
+      "peak_rss_mib": 379.859,
+      "incremental_peak_rss_mib": 320.344,
+      "rtf": 0.040229,
+      "audio": {
+        "duration_seconds": 9.346032,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 206080,
+        "size_bytes": 412204,
+        "sha256": "b74b8a647da565e3a4bf62f789aa898b82d840a98a646cec730a20875c0a6f7d",
+        "signal": {
+          "rms": 6271.731,
+          "clipping_fraction": 9.7e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 18,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "d85afa99874d.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "es-US-headline-byline",
+      "locale": "es-US",
+      "category": "headline-byline",
+      "blind_id": "59c030aec854",
+      "status": "succeeded",
+      "failure": null,
+      "model": "es_MX-claude-high",
+      "voice": "es_MX-claude-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.523534,
+      "synthesis_seconds": 0.294677,
+      "peak_rss_mib": 367.422,
+      "incremental_peak_rss_mib": 308.203,
+      "rtf": 0.040806,
+      "audio": {
+        "duration_seconds": 7.221406,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 159232,
+        "size_bytes": 318508,
+        "sha256": "8f3ce8ce3014f67d9ad61cdbc06a77248065dc53befd4fdffb4c1a5d8ec92a09",
+        "signal": {
+          "rms": 4646.085,
+          "clipping_fraction": 6.28e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 14,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "59c030aec854.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "es-US-long-form",
+      "locale": "es-US",
+      "category": "long-form",
+      "blind_id": "ab37b9ae0b21",
+      "status": "succeeded",
+      "failure": null,
+      "model": "es_MX-claude-high",
+      "voice": "es_MX-claude-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.514774,
+      "synthesis_seconds": 2.444857,
+      "peak_rss_mib": 442.828,
+      "incremental_peak_rss_mib": 383.281,
+      "rtf": 0.042482,
+      "audio": {
+        "duration_seconds": 57.550658,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 1268992,
+        "size_bytes": 2538028,
+        "sha256": "cd7acf00618613a38c549afa02d472937357f7e0aa150cff6a39f91d79aaa9f5",
+        "signal": {
+          "rms": 5639.497,
+          "clipping_fraction": 4.73e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "within-target",
+          "outside_target": false
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 115,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "ab37b9ae0b21.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "es-US-numbers-dates-currency",
+      "locale": "es-US",
+      "category": "numbers-dates-currency",
+      "blind_id": "18e70ddd2113",
+      "status": "succeeded",
+      "failure": null,
+      "model": "es_MX-claude-high",
+      "voice": "es_MX-claude-high",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.514443,
+      "synthesis_seconds": 0.44465,
+      "peak_rss_mib": 488.281,
+      "incremental_peak_rss_mib": 428.781,
+      "rtf": 0.036063,
+      "audio": {
+        "duration_seconds": 12.329796,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 271872,
+        "size_bytes": 543788,
+        "sha256": "931701085ac9b083bbf704b6b1b4a491ed921a5e48db611c67f8d17daf479cd5",
+        "signal": {
+          "rms": 5929.296,
+          "clipping_fraction": 3.68e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 24,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "18e70ddd2113.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "fr-FR-acronyms-quotations",
+      "locale": "fr-FR",
+      "category": "acronyms-quotations",
+      "blind_id": "27ee2d771360",
+      "status": "succeeded",
+      "failure": null,
+      "model": "fr_FR-siwis-medium",
+      "voice": "fr_FR-siwis-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.624083,
+      "synthesis_seconds": 0.297686,
+      "peak_rss_mib": 373.844,
+      "incremental_peak_rss_mib": 314.422,
+      "rtf": 0.039027,
+      "audio": {
+        "duration_seconds": 7.627755,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 168192,
+        "size_bytes": 336428,
+        "sha256": "df2faeff3c64d21f8e7f55e0acf6e969babf90386d5200dbe6a5dbf85a0cf54f",
+        "signal": {
+          "rms": 5256.742,
+          "clipping_fraction": 5.95e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 15,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "27ee2d771360.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "fr-FR-headline-byline",
+      "locale": "fr-FR",
+      "category": "headline-byline",
+      "blind_id": "92d7c4abb9eb",
+      "status": "succeeded",
+      "failure": null,
+      "model": "fr_FR-siwis-medium",
+      "voice": "fr_FR-siwis-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.666834,
+      "synthesis_seconds": 0.247897,
+      "peak_rss_mib": 347.469,
+      "incremental_peak_rss_mib": 287.891,
+      "rtf": 0.039106,
+      "audio": {
+        "duration_seconds": 6.339048,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 139776,
+        "size_bytes": 279596,
+        "sha256": "4a46db0516c681286db1770f8f00470968d05df98f008fa5c3b4c638e559ff24",
+        "signal": {
+          "rms": 5619.595,
+          "clipping_fraction": 7.15e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 12,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "92d7c4abb9eb.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "fr-FR-long-form",
+      "locale": "fr-FR",
+      "category": "long-form",
+      "blind_id": "62fe6e25d196",
+      "status": "succeeded",
+      "failure": null,
+      "model": "fr_FR-siwis-medium",
+      "voice": "fr_FR-siwis-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.684963,
+      "synthesis_seconds": 2.519565,
+      "peak_rss_mib": 428.297,
+      "incremental_peak_rss_mib": 368.938,
+      "rtf": 0.051524,
+      "audio": {
+        "duration_seconds": 48.901224,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 1078272,
+        "size_bytes": 2156588,
+        "sha256": "ac82029027a1165fc788dafca201749123493112a1288d9339600056b1f57532",
+        "signal": {
+          "rms": 5143.968,
+          "clipping_fraction": 5.56e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "within-target",
+          "outside_target": false
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 97,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "62fe6e25d196.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "fr-FR-numbers-dates-currency",
+      "locale": "fr-FR",
+      "category": "numbers-dates-currency",
+      "blind_id": "4cb114bc38aa",
+      "status": "succeeded",
+      "failure": null,
+      "model": "fr_FR-siwis-medium",
+      "voice": "fr_FR-siwis-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.64959,
+      "synthesis_seconds": 0.409029,
+      "peak_rss_mib": 403.828,
+      "incremental_peak_rss_mib": 344.656,
+      "rtf": 0.040824,
+      "audio": {
+        "duration_seconds": 10.01941,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 220928,
+        "size_bytes": 441900,
+        "sha256": "1558b186987b2883ddad52e8a8e0b96279d46f334523e4a184cd4a4b95128369",
+        "signal": {
+          "rms": 4400.841,
+          "clipping_fraction": 4.53e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 20,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "4cb114bc38aa.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "pt-BR-acronyms-quotations",
+      "locale": "pt-BR",
+      "category": "acronyms-quotations",
+      "blind_id": "75e162e98bea",
+      "status": "succeeded",
+      "failure": null,
+      "model": "pt_BR-faber-medium",
+      "voice": "pt_BR-faber-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.619097,
+      "synthesis_seconds": 0.292921,
+      "peak_rss_mib": 375.562,
+      "incremental_peak_rss_mib": 316.234,
+      "rtf": 0.037883,
+      "audio": {
+        "duration_seconds": 7.732245,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 170496,
+        "size_bytes": 341036,
+        "sha256": "583b659a5f9cd32587460500a2eb87e17a2899d653f1356d69ccf54bcc3bd61c",
+        "signal": {
+          "rms": 4338.564,
+          "clipping_fraction": 5.87e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 15,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "75e162e98bea.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "pt-BR-headline-byline",
+      "locale": "pt-BR",
+      "category": "headline-byline",
+      "blind_id": "05da874f5a0f",
+      "status": "succeeded",
+      "failure": null,
+      "model": "pt_BR-faber-medium",
+      "voice": "pt_BR-faber-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.66757,
+      "synthesis_seconds": 0.216489,
+      "peak_rss_mib": 314.438,
+      "incremental_peak_rss_mib": 255.281,
+      "rtf": 0.038447,
+      "audio": {
+        "duration_seconds": 5.630839,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 124160,
+        "size_bytes": 248364,
+        "sha256": "913a2e4db120f435157853b6e0242d38033f07191b064ee02685e358f84c320b",
+        "signal": {
+          "rms": 5623.008,
+          "clipping_fraction": 8.05e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 11,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "05da874f5a0f.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "pt-BR-long-form",
+      "locale": "pt-BR",
+      "category": "long-form",
+      "blind_id": "30dcc16c57a5",
+      "status": "succeeded",
+      "failure": null,
+      "model": "pt_BR-faber-medium",
+      "voice": "pt_BR-faber-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.632487,
+      "synthesis_seconds": 2.152325,
+      "peak_rss_mib": 410.531,
+      "incremental_peak_rss_mib": 351.094,
+      "rtf": 0.044564,
+      "audio": {
+        "duration_seconds": 48.297506,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 1064960,
+        "size_bytes": 2129964,
+        "sha256": "b9066f18707861a49a205cfe87647fe76b3d4aadb6419cbc2efebba2a1c5d014",
+        "signal": {
+          "rms": 5383.206,
+          "clipping_fraction": 6.57e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "within-target",
+          "outside_target": false
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 96,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "30dcc16c57a5.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "piper",
+      "fixture_id": "pt-BR-numbers-dates-currency",
+      "locale": "pt-BR",
+      "category": "numbers-dates-currency",
+      "blind_id": "5f33774178ec",
+      "status": "succeeded",
+      "failure": null,
+      "model": "pt_BR-faber-medium",
+      "voice": "pt_BR-faber-medium",
+      "backend": "onnxruntime-cpu",
+      "seed": 20260906,
+      "cold_load_seconds": 0.630459,
+      "synthesis_seconds": 0.485728,
+      "peak_rss_mib": 435.5,
+      "incremental_peak_rss_mib": 376.062,
+      "rtf": 0.04167,
+      "audio": {
+        "duration_seconds": 11.656417,
+        "format": "wav",
+        "encoding": "pcm_s16le",
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 257024,
+        "size_bytes": 514092,
+        "sha256": "44e78eddd575df9e65270a6e9da9da75addfff4350ff90211f7f79b05df31c82",
+        "signal": {
+          "rms": 4383.939,
+          "clipping_fraction": 3.89e-06,
+          "silent": false
+        },
+        "truncation": {
+          "status": "unverified",
+          "method": "duration target only; semantic transcript or human review required",
+          "duration_target_observation": "not-applicable",
+          "outside_target": null
+        },
+        "repetition": {
+          "status": "unverified",
+          "method": "exact non-silent 500 ms PCM window heuristic; semantic transcript or human review required",
+          "inspected_non_silent_windows": 23,
+          "exact_repeated_windows": 0
+        },
+        "artifact": "5f33774178ec.wav"
+      },
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "en-US-headline-byline",
+      "locale": "en-US",
+      "category": "headline-byline",
+      "blind_id": "b922cf51270b",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "en-US-numbers-dates-currency",
+      "locale": "en-US",
+      "category": "numbers-dates-currency",
+      "blind_id": "9eb612b70cf0",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "en-US-acronyms-quotations",
+      "locale": "en-US",
+      "category": "acronyms-quotations",
+      "blind_id": "a20ffd859975",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "en-US-long-form",
+      "locale": "en-US",
+      "category": "long-form",
+      "blind_id": "39accfbeb171",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "es-US-headline-byline",
+      "locale": "es-US",
+      "category": "headline-byline",
+      "blind_id": "5b7502fa67d8",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "es-US-numbers-dates-currency",
+      "locale": "es-US",
+      "category": "numbers-dates-currency",
+      "blind_id": "d4306413d373",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "es-US-acronyms-quotations",
+      "locale": "es-US",
+      "category": "acronyms-quotations",
+      "blind_id": "d84fa5a9b1bc",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "es-US-long-form",
+      "locale": "es-US",
+      "category": "long-form",
+      "blind_id": "64edac0c5f63",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "fr-FR-headline-byline",
+      "locale": "fr-FR",
+      "category": "headline-byline",
+      "blind_id": "035d3559c375",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "fr-FR-numbers-dates-currency",
+      "locale": "fr-FR",
+      "category": "numbers-dates-currency",
+      "blind_id": "7cd57017e1da",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "fr-FR-acronyms-quotations",
+      "locale": "fr-FR",
+      "category": "acronyms-quotations",
+      "blind_id": "847b4a950569",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "fr-FR-long-form",
+      "locale": "fr-FR",
+      "category": "long-form",
+      "blind_id": "422fbd89b560",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "de-DE-headline-byline",
+      "locale": "de-DE",
+      "category": "headline-byline",
+      "blind_id": "9b9d0b098487",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "de-DE-numbers-dates-currency",
+      "locale": "de-DE",
+      "category": "numbers-dates-currency",
+      "blind_id": "e20f38bb2376",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "de-DE-acronyms-quotations",
+      "locale": "de-DE",
+      "category": "acronyms-quotations",
+      "blind_id": "73cd54bb05b1",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "de-DE-long-form",
+      "locale": "de-DE",
+      "category": "long-form",
+      "blind_id": "44a28774d51c",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "pt-BR-headline-byline",
+      "locale": "pt-BR",
+      "category": "headline-byline",
+      "blind_id": "48aa9b1b2549",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "pt-BR-numbers-dates-currency",
+      "locale": "pt-BR",
+      "category": "numbers-dates-currency",
+      "blind_id": "38c2b51473ce",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "pt-BR-acronyms-quotations",
+      "locale": "pt-BR",
+      "category": "acronyms-quotations",
+      "blind_id": "1bcb8f5a4c59",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "chatterbox",
+      "fixture_id": "pt-BR-long-form",
+      "locale": "pt-BR",
+      "category": "long-form",
+      "blind_id": "128297788ee4",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "en-US-headline-byline",
+      "locale": "en-US",
+      "category": "headline-byline",
+      "blind_id": "df5be6d7003e",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "en-US-numbers-dates-currency",
+      "locale": "en-US",
+      "category": "numbers-dates-currency",
+      "blind_id": "ae7dca490c28",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "en-US-acronyms-quotations",
+      "locale": "en-US",
+      "category": "acronyms-quotations",
+      "blind_id": "40b8c3ed6af5",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "en-US-long-form",
+      "locale": "en-US",
+      "category": "long-form",
+      "blind_id": "210f676e605c",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "es-US-headline-byline",
+      "locale": "es-US",
+      "category": "headline-byline",
+      "blind_id": "b07076452c5b",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "es-US-numbers-dates-currency",
+      "locale": "es-US",
+      "category": "numbers-dates-currency",
+      "blind_id": "d7e7840dd5fb",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "es-US-acronyms-quotations",
+      "locale": "es-US",
+      "category": "acronyms-quotations",
+      "blind_id": "16756cf2e043",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "es-US-long-form",
+      "locale": "es-US",
+      "category": "long-form",
+      "blind_id": "093d6296c64e",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "fr-FR-headline-byline",
+      "locale": "fr-FR",
+      "category": "headline-byline",
+      "blind_id": "33e832de8c0f",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "fr-FR-numbers-dates-currency",
+      "locale": "fr-FR",
+      "category": "numbers-dates-currency",
+      "blind_id": "df91ad80d6d3",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "fr-FR-acronyms-quotations",
+      "locale": "fr-FR",
+      "category": "acronyms-quotations",
+      "blind_id": "8eebe73ea563",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "fr-FR-long-form",
+      "locale": "fr-FR",
+      "category": "long-form",
+      "blind_id": "2c25c96feaf9",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "de-DE-headline-byline",
+      "locale": "de-DE",
+      "category": "headline-byline",
+      "blind_id": "f51d817fbd2f",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "de-DE-numbers-dates-currency",
+      "locale": "de-DE",
+      "category": "numbers-dates-currency",
+      "blind_id": "050c849588ef",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "de-DE-acronyms-quotations",
+      "locale": "de-DE",
+      "category": "acronyms-quotations",
+      "blind_id": "acf0e29d8839",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "de-DE-long-form",
+      "locale": "de-DE",
+      "category": "long-form",
+      "blind_id": "ef11a6c7cbf3",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "pt-BR-headline-byline",
+      "locale": "pt-BR",
+      "category": "headline-byline",
+      "blind_id": "89a1f35d171d",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "pt-BR-numbers-dates-currency",
+      "locale": "pt-BR",
+      "category": "numbers-dates-currency",
+      "blind_id": "212de39b14f1",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "pt-BR-acronyms-quotations",
+      "locale": "pt-BR",
+      "category": "acronyms-quotations",
+      "blind_id": "db9cae0591e6",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    },
+    {
+      "engine": "polly",
+      "fixture_id": "pt-BR-long-form",
+      "locale": "pt-BR",
+      "category": "long-form",
+      "blind_id": "3065071585c1",
+      "status": "unavailable",
+      "failure": {
+        "type": "EngineUnavailable",
+        "message": "required dependency or explicitly supplied artifact is unavailable"
+      },
+      "model": null,
+      "voice": null,
+      "backend": null,
+      "cold_load_seconds": null,
+      "synthesis_seconds": null,
+      "peak_rss_mib": null,
+      "incremental_peak_rss_mib": null,
+      "rtf": null,
+      "audio": null,
+      "asr": {
+        "status": "not-run",
+        "wer": null,
+        "transcript_sha256": null
+      }
+    }
+  ],
+  "summary": {
+    "piper": {
+      "total": 20,
+      "succeeded": 20,
+      "failed": 0,
+      "unavailable": 0,
+      "median_rtf": 0.043523,
+      "median_synthesis_seconds": 1.626325,
+      "median_cold_load_seconds": 0.667202,
+      "cold_load_observations": [
+        0.703166,
+        0.784519,
+        0.736298,
+        0.741071,
+        0.794503,
+        0.800669,
+        0.838704,
+        0.800311,
+        0.519785,
+        0.523534,
+        0.514774,
+        0.514443,
+        0.624083,
+        0.666834,
+        0.684963,
+        0.64959,
+        0.619097,
+        0.66757,
+        0.632487,
+        0.630459
+      ],
+      "median_peak_rss_mib": 407.1795,
+      "peak_rss_mib": 546.984,
+      "median_incremental_peak_rss_mib": 347.875,
+      "max_incremental_peak_rss_mib": 487.656,
+      "output_bytes": 16746864,
+      "semantic_integrity": "unverified",
+      "integrity_warnings": 0
+    },
+    "chatterbox": {
+      "total": 20,
+      "succeeded": 0,
+      "failed": 0,
+      "unavailable": 20,
+      "median_rtf": null,
+      "median_synthesis_seconds": null,
+      "median_cold_load_seconds": null,
+      "cold_load_observations": [],
+      "median_peak_rss_mib": null,
+      "peak_rss_mib": null,
+      "median_incremental_peak_rss_mib": null,
+      "max_incremental_peak_rss_mib": null,
+      "output_bytes": 0,
+      "semantic_integrity": "not-applicable",
+      "integrity_warnings": 0
+    },
+    "polly": {
+      "total": 20,
+      "succeeded": 0,
+      "failed": 0,
+      "unavailable": 20,
+      "median_rtf": null,
+      "median_synthesis_seconds": null,
+      "median_cold_load_seconds": null,
+      "cold_load_observations": [],
+      "median_peak_rss_mib": null,
+      "peak_rss_mib": null,
+      "median_incremental_peak_rss_mib": null,
+      "max_incremental_peak_rss_mib": null,
+      "output_bytes": 0,
+      "semantic_integrity": "not-applicable",
+      "integrity_warnings": 0
+    }
+  },
+  "decision": {
+    "status": "no-selection",
+    "reason": "Objective results alone cannot pass the required blinded human, locale-accent, semantic-integrity, and license gates.",
+    "es-US": "No open-source candidate has exact es-US accent evidence. Piper es-MX and Chatterbox es-MX/LatAm are comparators only; selection is forbidden until blinded es-US reviewer scores and license approval are recorded.",
+    "next_step": "Score successful blinded clips with qualified reviewers, add ASR or transcript review, and obtain license approval before choosing a replacement."
+  }
+}

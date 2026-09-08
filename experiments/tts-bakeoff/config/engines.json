@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-09-06",
+  "required_locales": ["en-US", "es-US", "fr-FR", "de-DE", "pt-BR"],
+  "engines": {
+    "chatterbox": {
+      "dependency": {
+        "name": "chatterbox-tts",
+        "version": "0.1.7",
+        "wheel_sha256": "83782500e3ad4e7c919132e9d7eb8755f29f57c5bde5ec48c655ca23a4eb113c",
+        "license": "MIT"
+      },
+      "source": {
+        "url": "https://github.com/resemble-ai/chatterbox",
+        "revision": "5de7a54aa4e5e2baadb0182dde554908b48b85c2",
+        "license": "MIT"
+      },
+      "models": {
+        "multilingual-v3": {
+          "url": "https://huggingface.co/ResembleAI/chatterbox",
+          "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+          "file": "t3_mtl23ls_v3.safetensors",
+          "sha256": "5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953",
+          "license": "MIT",
+          "benchmark_status": "general comparator selected for the executable harness",
+          "required_files": [
+            {"repository": "ResembleAI/chatterbox", "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "source_file": "ve.pt", "local_file": "ve.pt", "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"},
+            {"repository": "ResembleAI/chatterbox", "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "source_file": "s3gen.pt", "local_file": "s3gen.pt", "sha256": "9b9ff07e60b20c136e2b1b3d7563a24604e8d2c4c267888d1ee929dd0151d2a3"},
+            {"repository": "ResembleAI/chatterbox", "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "source_file": "grapheme_mtl_merged_expanded_v1.json", "local_file": "grapheme_mtl_merged_expanded_v1.json", "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"},
+            {"repository": "ResembleAI/chatterbox", "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "source_file": "t3_mtl23ls_v3.safetensors", "local_file": "t3_mtl23ls_v3.safetensors", "sha256": "5abca8321ede76f8e61f1cc0d19aea6c946b28871017ce8726f8a69203f05953"}
+          ],
+          "voice_provenance": "Zero-shot voice cloning; a user-supplied reference clip is required and must have recorded consent and usage rights."
+        },
+        "es-mx-latam": {
+          "url": "https://huggingface.co/ResembleAI/Chatterbox-Multilingual-es-mx-latam",
+          "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7",
+          "file": "t3_es_mx_latam.safetensors",
+          "sha256": "c66c4517f11c2b35a56e28615c0689deb864cbc411e329552223bbd0a6a063f8",
+          "license": "MIT",
+          "benchmark_status": "provenance-only regional candidate; no released pinned loader contract beyond the companion-asset note",
+          "required_files": [
+            {"repository": "ResembleAI/chatterbox", "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "source_file": "ve.pt", "local_file": "ve.pt", "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"},
+            {"repository": "ResembleAI/Chatterbox-Multilingual-es-mx-latam", "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7", "source_file": "s3gen_v3.pt", "local_file": "s3gen.pt", "sha256": "f7abce4b196dae2d08d9296cbebc6521b046079577643b42a19a03499d08721e"},
+            {"repository": "ResembleAI/Chatterbox-Multilingual-es-mx-latam", "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7", "source_file": "grapheme_mtl_merged_expanded_v1.json", "local_file": "grapheme_mtl_merged_expanded_v1.json", "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"},
+            {"repository": "ResembleAI/Chatterbox-Multilingual-es-mx-latam", "revision": "27e595bf2fe7be0533ca299d9afafcde08b7cca7", "source_file": "t3_es_mx_latam.safetensors", "local_file": "t3_es_mx_latam.safetensors", "sha256": "c66c4517f11c2b35a56e28615c0689deb864cbc411e329552223bbd0a6a063f8"}
+          ],
+          "voice_provenance": "Latin-American Spanish regional checkpoint; not evidence of an es-US accent. PerTh watermarking remains enabled by the runtime."
+        },
+        "pt-br": {
+          "url": "https://huggingface.co/ResembleAI/Chatterbox-Multilingual-pt-br",
+          "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d",
+          "file": "t3_pt_br.safetensors",
+          "sha256": "074aaf65255eb9cb960288f7cc72e09d3b5008f6e0b14868c0d4e5b0bd7cbb6c",
+          "license": "MIT",
+          "benchmark_status": "provenance-only regional candidate; no released pinned loader contract beyond the companion-asset note",
+          "required_files": [
+            {"repository": "ResembleAI/chatterbox", "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "source_file": "ve.pt", "local_file": "ve.pt", "sha256": "4b16d836bc598509860f6fa068165a8bb5e9ac84f05582dfcf278a5a372879f1"},
+            {"repository": "ResembleAI/Chatterbox-Multilingual-pt-br", "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d", "source_file": "s3gen_v3.pt", "local_file": "s3gen.pt", "sha256": "f7abce4b196dae2d08d9296cbebc6521b046079577643b42a19a03499d08721e"},
+            {"repository": "ResembleAI/Chatterbox-Multilingual-pt-br", "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d", "source_file": "grapheme_mtl_merged_expanded_v1.json", "local_file": "grapheme_mtl_merged_expanded_v1.json", "sha256": "69632f47220a788a52ce2661d096453c5655e9bf25289d89a8d832c46ee07dbf"},
+            {"repository": "ResembleAI/Chatterbox-Multilingual-pt-br", "revision": "b3952f18bc2eaa72b9bd7c17d2c4653bcad4770d", "source_file": "t3_pt_br.safetensors", "local_file": "t3_pt_br.safetensors", "sha256": "074aaf65255eb9cb960288f7cc72e09d3b5008f6e0b14868c0d4e5b0bd7cbb6c"}
+          ],
+          "voice_provenance": "Brazilian Portuguese regional checkpoint; reference-voice consent is still required and PerTh watermarking remains enabled."
+        }
+      },
+      "locale_mapping": {
+        "en-US": {"language_id": "en", "model": "multilingual-v3", "accent_evidence": "generic language ID only"},
+        "es-US": {"language_id": "es", "model": "multilingual-v3", "accent_evidence": "generic es language ID only; the cataloged es-MX pack is provenance-only and is not exact es-US evidence"},
+        "fr-FR": {"language_id": "fr", "model": "multilingual-v3", "accent_evidence": "generic language ID only"},
+        "de-DE": {"language_id": "de", "model": "multilingual-v3", "accent_evidence": "generic language ID only"},
+        "pt-BR": {"language_id": "pt", "model": "multilingual-v3", "accent_evidence": "generic pt language ID; the cataloged regional pack remains provenance-only until its loader contract is independently verified"}
+      },
+      "network_policy": "Runner accepts only a pre-fetched local snapshot and calls from_local; it never follows upstream's floating main revision."
+    },
+    "piper": {
+      "dependency": {
+        "name": "piper-tts",
+        "version": "1.8.0",
+        "macos_arm64_wheel_sha256": "33e7425933e9290fe651ae127916ed1ca6104cfa3d94e9049295dd3a5c449382",
+        "license": "GPL-3.0-or-later"
+      },
+      "source": {
+        "url": "https://github.com/OHF-Voice/piper1-gpl",
+        "revision": "639388b6317fc4731e91d53da42aea68fd4166ff",
+        "license": "GPL-3.0-or-later"
+      },
+      "model_repository": {
+        "url": "https://huggingface.co/rhasspy/piper-voices",
+        "revision": "375a0fe641dea077c2a47b4e9a056d6da521eed3",
+        "license": "per-voice; see each model card"
+      },
+      "locale_mapping": {
+        "en-US": {
+          "voice": "en_US-ljspeech-high",
+          "path": "en/en_US/ljspeech/high/en_US-ljspeech-high.onnx",
+          "model_md5": "dad093b5d2cff6a5fda99883ceda09d1",
+          "model_sha256": "5d4f08ba6a2a48c44592eed3ce56bf85e9de3dd4e20df90541ae68a8310c029a",
+          "config_md5": "de98fc398ddead60fb82d93bfafb3ad1",
+          "model_card_md5": "59322a9a8d2c0e556f0be1171cd54ea7",
+          "dataset_license": "Public domain",
+          "accent_evidence": "exact en-US locale tag"
+        },
+        "es-US": {
+          "voice": "es_MX-claude-high",
+          "path": "es/es_MX/claude/high/es_MX-claude-high.onnx",
+          "model_md5": "cb1966e0ff20ca3aa010f6c9a0ce296a",
+          "model_sha256": "3ef40a71ea63852cd8ab7e6fa7d2ecdcfa67a0b47c9c48e3f10e02ee02083ea0",
+          "config_md5": "36882201922fabb409f18d284af3eddd",
+          "model_card_md5": "bca99dc9b9a6c8f2f8563d73d52c4a3b",
+          "dataset_license": "Apache-2.0",
+          "accent_evidence": "es-MX comparator only; no exact es-US voice"
+        },
+        "fr-FR": {
+          "voice": "fr_FR-siwis-medium",
+          "path": "fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx",
+          "model_md5": "20e876e8c839e9b11a26085858f2300c",
+          "model_sha256": "641d1ab097da2b81128c076810edb052b385decc8be3381814802a64a73baf99",
+          "config_md5": "a407e7e6901feb79c2ea2a5466076cce",
+          "model_card_md5": "2b9ea48b15e9e1fd25f95b415caaf66f",
+          "dataset_license": "CC-BY-4.0",
+          "accent_evidence": "exact fr-FR locale tag"
+        },
+        "de-DE": {
+          "voice": "de_DE-thorsten-high",
+          "path": "de/de_DE/thorsten/high/de_DE-thorsten-high.onnx",
+          "model_md5": "256505fe58fb8b9d6ed78b83f6b8a9d2",
+          "model_sha256": "9df1c43c61149ef9b39e618e2b861fbe41e1fcea9390b2dac62e8761573ea4f1",
+          "config_md5": "e81686e00a9d825e2488ead660bec6fd",
+          "model_card_md5": "582a051328d56a564e8a38c9029ae630",
+          "dataset_license": "CC0-1.0",
+          "accent_evidence": "exact de-DE locale tag"
+        },
+        "pt-BR": {
+          "voice": "pt_BR-faber-medium",
+          "path": "pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx",
+          "model_md5": "e0724a2f07965f6523d2a1e96b488a4c",
+          "model_sha256": "858555e3a064209c57088fe6bd70c4c3dc54d03eaa00c45d5ecaf43a33f95aa7",
+          "config_md5": "a1258e1e113c47d9a1486a9bef1daab4",
+          "model_card_md5": "a81a3840b1749cf34b0e31de1577ef47",
+          "dataset_license": "CC0-1.0",
+          "accent_evidence": "exact pt-BR locale tag"
+        }
+      },
+      "network_policy": "Models must be explicitly fetched from the pinned revision and checksum-verified before synthesis."
+    },
+    "polly": {
+      "dependency": {
+        "name": "boto3",
+        "version": "1.43.89",
+        "wheel_sha256": "fe4190afe63eb562b6ba6a3911cf4427473b35fa047adde093bf696d3ae09fc0",
+        "license": "Apache-2.0"
+      },
+      "source": {
+        "url": "https://docs.aws.amazon.com/polly/latest/dg/available-voices.html",
+        "revision": "AWS-managed-service-observed-2026-09-06",
+        "license": "AWS service terms; review required"
+      },
+      "model": {
+        "artifact_checksum": null,
+        "checksum_status": "not published for the managed neural service",
+        "voice_provenance": "AWS-managed named neural voices"
+      },
+      "locale_mapping": {
+        "en-US": {"voice": "Joanna", "engine": "neural", "accent_evidence": "AWS en-US voice"},
+        "es-US": {"voice": "Lupe", "engine": "neural", "accent_evidence": "AWS es-US voice"},
+        "fr-FR": {"voice": "Lea", "engine": "neural", "accent_evidence": "AWS fr-FR voice"},
+        "de-DE": {"voice": "Vicki", "engine": "neural", "accent_evidence": "AWS de-DE voice"},
+        "pt-BR": {"voice": "Camila", "engine": "neural", "accent_evidence": "AWS pt-BR voice"}
+      },
+      "network_policy": "Disabled unless --allow-network is supplied; credentials, cost, and service terms remain operator responsibilities."
+    }
+  },
+  "decision_gates": {
+    "required_human_dimensions": ["intelligibility", "naturalness", "cadence", "pronunciation", "accent_fit"],
+    "scores": {"minimum": 1, "maximum": 5},
+    "license_gate": "Every runtime and selected voice/dataset must be compatible with the intended distribution and attribution plan.",
+    "locale_gate": "Every required locale needs applicable output and blinded human review.",
+    "es-US": "No open-source candidate has exact es-US accent evidence. Piper es-MX and Chatterbox es-MX/LatAm are comparators only; selection is forbidden until blinded es-US reviewer scores and license approval are recorded."
+  }
+}

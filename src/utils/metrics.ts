@@ -21,6 +21,10 @@ type Operation =
   | 'start_execution'
   | 'update';
 type RetryOperation = 'content_poll' | 'workflow_task';
+/** Bounded: how much work one request asked for. Never a content or locale identifier. */
+type LocaleClass = 'single' | 'subset' | 'all';
+/** Bounded: what happened to one requested locale. */
+type RenditionResult = 'hit' | 'miss' | 'reused' | 'failed';
 type Unit = 'Count' | 'None' | 'Seconds';
 
 interface Measurement {
@@ -159,6 +163,47 @@ const recordWorkflowBacklog = (stage: Stage, backlog: number) => {
   ]);
 };
 
+/**
+ * Records how many locales a request asked for, dimensioned only by the bounded
+ * request class. No content identifier is ever emitted.
+ */
+const recordRenditionRequest = (
+  stage: Stage,
+  localeClass: LocaleClass,
+  requested: number
+) => {
+  emit(stage, { locale_class: localeClass }, [
+    {
+      name: 'guggiana_rendition_requested_locales',
+      unit: 'Count',
+      value: requested,
+    },
+  ]);
+};
+
+/**
+ * Records the outcome of each requested locale: served from cache, newly
+ * generated, reused from a concurrent claim, or failed.
+ *
+ * `hit` and `reused` are the avoided translation-and-synthesis work; `miss` is
+ * the work actually paid for.
+ */
+const recordRenditionResult = (
+  stage: Stage,
+  localeClass: LocaleClass,
+  result: RenditionResult,
+  count: number
+) => {
+  if (count <= 0) return;
+  emit(stage, { locale_class: localeClass, result }, [
+    {
+      name: 'guggiana_rendition_locales_total',
+      unit: 'Count',
+      value: count,
+    },
+  ]);
+};
+
 const recordWorkflowOutcome = (
   stage: Stage,
   result: Extract<Result, 'success' | 'failure' | 'skipped'>
@@ -190,9 +235,18 @@ const instrumentHandler = <T extends (...args: any[]) => Promise<any>>(
 export {
   instrumentHandler,
   observeDependency,
+  recordRenditionRequest,
+  recordRenditionResult,
   recordRetry,
   recordWorkflowBacklog,
   recordWorkflowBatch,
   recordWorkflowOutcome,
 };
-export type { Dependency, Operation, Result, Stage };
+export type {
+  Dependency,
+  LocaleClass,
+  Operation,
+  RenditionResult,
+  Result,
+  Stage,
+};

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guggiana-local-synthesis"
+version = "0.1.0"
+description = "Bounded provider-neutral local speech synthesis worker"
+requires-python = ">=3.11,<3.12"
+license = "MIT"
+
+[project.scripts]
+guggiana-local-synthesis = "local_synthesis.server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["local_synthesis*"]
+
+[tool.setuptools.package-data]
+local_synthesis = ["py.typed"]
+
+[tool.setuptools.data-files]
+"share/guggiana-local-synthesis" = [
+  "config/model-manifest.json",
+  "config/worker.example.json",
+]

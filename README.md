@@ -11,8 +11,12 @@ This project is particularly useful for applications requiring multilingual text
 The repository includes the following features:
 - **Content-to-Speech Workflow**: Converts articles into audio using AWS Polly.
 - **Multilingual Support**: Processes content in multiple languages, including English, Spanish, French, German, and Portuguese.
+- **Lazy language renditions**: only the locales a caller explicitly asks for are translated and synthesized, with per-locale atomic claims so concurrent callers never duplicate the work. See [`docs/lazy-language-renditions.md`](docs/lazy-language-renditions.md).
 - **Dynamic Language Detection**: Automatically translates content before generating audio.
 - **SSML Support**: Prepares text in SSML (Speech Synthesis Markup Language) for enhanced audio quality.
+- **Provider-neutral speech contract**: `src/domain/speech/` defines the speech domain (locales, semantic voice roles, plain-text segments, explicit pauses, PCM output, job states, pinned artifact metadata) independently of Polly, with validation and a deterministic fake provider. It is not wired into the deployed workflow. See [`docs/speech-synthesis-contract.md`](docs/speech-synthesis-contract.md).
+- **Multilingual TTS bake-off**: `experiments/tts-bakeoff/` provides a pinned, standalone Chatterbox/Piper/Polly comparison with 20 fixtures, optional fully local ASR diagnostics, explicit evidence states, objective M1 metrics, and a checksummed randomized reviewer packet. It does not import or change production code. See the [experiment guide](experiments/tts-bakeoff/README.md).
+- **Optional local synthesis worker**: `worker/` packages pinned Chatterbox and Piper adapters behind a bounded asynchronous submit/status/artifact API with durable job state, PCM normalization, cancellation, retries, health, readiness, and private metrics. Provider selection remains explicit per request and the worker is not wired into production. See the [worker runbook](worker/README.md).
 - **AWS Step Functions**: Orchestrates workflows for tasks such as translation, speech synthesis, and merging audio.
 - **DynamoDB Integration**: Stores metadata and processing statuses for content.
 - **S3 Storage**: Manages audio files in S3 for easy accessibility.
@@ -22,8 +26,8 @@ The repository includes the following features:
 
 ## 📋 Requirements
 Before using this repository, ensure you have the following:
-- **Node.js** (>= 14.x)
-- **AWS CDK** (>= 2.x)
+- **Node.js** 22.x (the version used by CI)
+- The repository's locked **AWS CDK CLI** (`npm ci` installs it; use `npx cdk`)
 - **AWS Account** with permissions to use:
   - S3
   - DynamoDB
@@ -42,23 +46,23 @@ Follow these steps to set up the project:
    git clone https://github.com/gaulatti/guggiana.git
    cd guggiana
    ```
-2. Install dependencies:
+2. Install the exact dependency set, including the compatible CDK CLI:
    ```bash
-   npm install
+   npm ci
    ```
 3. Bootstrap AWS CDK:
    ```bash
-   cdk bootstrap
+   npx cdk bootstrap
    ```
 
 ---
 
 ## 🚀 Usage
 ### Deploying the Stack
-To deploy the infrastructure:
-```bash
-cdk deploy
-```
+Do not deploy from an unreviewed checkout. Follow the
+[deployment runbook](docs/deployment-runbook.md) to pin the source revision,
+inspect the exact account and Region, run the full validation and CDK diff, and
+capture post-deployment evidence. A deployment requires explicit authorization.
 
 ### Running Locally
 You can test individual Lambda functions locally using AWS SAM CLI:
@@ -75,6 +79,18 @@ npm test
 Run full test coverage with thresholds:
 ```bash
 npm run test:coverage
+```
+
+Run the offline TTS bake-off contract tests:
+
+```bash
+npm run test:tts-bakeoff
+```
+
+Run the local worker's offline fake-engine lifecycle and protocol tests:
+
+```bash
+npm run test:local-synthesis-worker
 ```
 
 For private repositories, configure `CODECOV_TOKEN` in GitHub repository secrets if your Codecov setup requires it.

@@ -3,14 +3,22 @@ import { S3RequestPresigner } from '@aws-sdk/s3-request-presigner';
 import { createRequest } from '@aws-sdk/util-create-request';
 import { formatUrl } from '@aws-sdk/util-format-url';
 import { randomUUID } from 'crypto';
-import { checkLanguagesPresent, delay, extractPathWithTrailingSlash } from '../../../utils';
+import { delay, extractPathWithTrailingSlash } from '../../../utils';
 import { getContentTableInstance } from '../../../utils/dal/content';
 import {
   instrumentHandler,
   observeDependency,
+  recordRenditionRequest,
+  recordRenditionResult,
   recordRetry,
   recordWorkflowOutcome,
 } from '../../../utils/metrics';
+import {
+  cachedLocales,
+  missingLocales,
+  renditionsPresent,
+  resolveRequestedLocales,
+} from '../../../utils/renditions';
 
 const db = getContentTableInstance(process.env.TABLE_NAME!);
 const client = new S3Client();
@@ -41,8 +49,16 @@ function parseS3Url(url: string) {
  * @param callback - The callback function to be called with the result.
  */
 const handler = async (event: any, _context: any, callback: any) => {
-  const { contentId, href, language } = event.args.input;
+  const { contentId, href, language, languages } = event.args.input;
   if (!contentId && !href) throw new Error('Missing contentId or url');
+
+  /**
+   * Only the locales the caller actually asked for are generated. A
+   * single-locale request is never expanded to every locale; `language: 'all'`
+   * and omitting the field entirely remain the deliberate all-locales paths.
+   */
+  const { codes, localeClass } = resolveRequestedLocales({ language, languages });
+  recordRenditionRequest('get', localeClass, codes.length);
   let existingItem: any;
   let url: string | null | undefined;
   let uuid: string | undefined;
@@ -78,7 +94,7 @@ const handler = async (event: any, _context: any, callback: any) => {
       'get',
       'dynamodb',
       'create',
-      () => db.create(randomUUID(), url)
+      () => db.create(randomUUID(), url, codes)
     );
     uuid = createResponse.uuid;
     console.log(`Created record for ${url}`);
@@ -87,15 +103,44 @@ const handler = async (event: any, _context: any, callback: any) => {
     );
   } else {
     uuid = existingItem.uuid;
+
+    /**
+     * An existing record only materializes locales it has been asked for.
+     * Adding the missing ones is what asks the trigger to generate them; the
+     * per-locale claim keeps concurrent callers on a single execution.
+     */
+    const missing = missingLocales(existingItem, codes);
+    const alreadyRequested: string[] = Array.isArray(existingItem.requestedLocales)
+      ? existingItem.requestedLocales
+      : [];
+    const newlyRequested = missing.filter(
+      (code) => !alreadyRequested.includes(code)
+    );
+    if (newlyRequested.length > 0) {
+      await observeDependency('get', 'dynamodb', 'update', () =>
+        db.addRequestedLocales(uuid!, newlyRequested)
+      );
+    }
   }
 
+  recordRenditionResult(
+    'get',
+    localeClass,
+    'hit',
+    cachedLocales(existingItem, codes).length
+  );
+  recordRenditionResult(
+    'get',
+    localeClass,
+    'miss',
+    missingLocales(existingItem, codes).length
+  );
+
   /**
-   * If we're only looking for one language, if
-   * that language exists we can return the item.
-   *
-   * Otherwise, we wait until all languages are generated.
+   * Wait only for the requested locales. Locales nobody asked for are never
+   * generated and are never waited on.
    */
-  while (!checkLanguagesPresent(existingItem, language)) {
+  while (!renditionsPresent(existingItem, codes)) {
     recordRetry('get', 'content_poll', 'waiting');
     await delay(1000);
     existingItem = await observeDependency('get', 'dynamodb', 'get', () =>
