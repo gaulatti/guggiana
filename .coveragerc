@@ -1,0 +1,4 @@
+[report]
+# Count every statement; the shared Clouseau gate rejects excluded lines.
+exclude_lines =
+    ^\Znever-matches$
