@@ -18,6 +18,31 @@ provider-neutral `SpeechDocument` to the exact body of the worker's
   boundaries (a pause stays with the text it precedes);
 - the module is exported but not called by any Lambda, so it is dark.
 
+## Dark provider seam and worker client
+
+Also landed, also uncalled:
+
+- `provider-selection.ts` (`parseSpeechProviderConfig`, `planSpeechProvider`):
+  an empty configuration selects **Polly**. `GUGGIANA_SPEECH_ROLLBACK_TO_POLLY=true`
+  is the explicit rollback switch: it forces Polly and disables dual-run
+  whatever else is set. Dual-run (`GUGGIANA_SPEECH_DUAL_RUN_PROVIDER` plus an
+  integer `GUGGIANA_SPEECH_DUAL_RUN_PERCENT`, default 0) only runs a local
+  provider beside Polly for a deterministic, operation-keyed sample; the shadow
+  audio is never served. Any invalid value is an error, never a fallback. No
+  Lambda reads these settings and the CDK stack does not define them.
+- `worker-client.ts` (`createLocalWorkerClient`): plain submit / status /
+  cancel / artifact calls over the worker's HTTP API with a bearer token, an
+  injected `fetch`, a per-call deadline and an artifact size bound.
+
+Where this stays stateless: the client and the selector hold no state and write
+nothing. Job and operation state remain in the existing DynamoDB tables and
+audio in the existing S3 bucket; the only durable worker state is the worker's
+own private SQLite queue, which the caller never reads directly. Whether a
+worker belongs in Guggiana at all is still the owner's decision (below).
+
+Tests assert that the synthesized stack is unchanged (Polly only, no selection
+setting) so merging this activates nothing.
+
 ## Decisions only the owner can make
 
 ### 1. How AWS reaches a loopback-only worker with a bearer token
