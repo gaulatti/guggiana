@@ -92,7 +92,7 @@ Run the local worker's offline fake-engine lifecycle and protocol tests:
 npm run test:local-synthesis-worker
 ```
 
-For private repositories, configure `CODECOV_TOKEN` in GitHub repository secrets if your Codecov setup requires it.
+CI no longer uploads to Codecov; coverage is enforced by the exact 100% line and branch gate described in [docs/clouseau-ci.md](docs/clouseau-ci.md), so no `CODECOV_TOKEN` secret is needed.
 
 ---
 
