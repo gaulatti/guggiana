@@ -1,5 +1,4 @@
 ## 📝 Introduction
-[![codecov](https://codecov.io/gh/gaulatti/guggiana/graph/badge.svg)](https://codecov.io/gh/gaulatti/guggiana)
 
 The **Guggiana Project** is an advanced AWS-based serverless application designed to handle content-to-speech workflows. It integrates various AWS services such as Step Functions, Polly, S3, and DynamoDB to process, translate, and convert text content into audio in multiple languages. The application is built using **TypeScript** and leverages the **AWS CDK (Cloud Development Kit)** for infrastructure as code.
 
@@ -177,3 +176,14 @@ This project is developed using:
 - **Cloud Provider**: AWS
 
 Enjoy using **Guggiana**! 🚀
+
+---
+
+## Clouseau CI
+
+Pull requests run tests and an exact 100% line/branch coverage gate for `src/`,
+then automatic Clouseau review, approval and merge. See
+[`docs/clouseau-ci.md`](docs/clouseau-ci.md), the
+[review contract](.github/clouseau.md) and the
+[configuration](.github/clouseau.json). The Python worker and bake-off trees are
+excluded from the exact gate for now; their tests still run.
