@@ -4,108 +4,15 @@
   "readme": "README.md",
   "repository_policy": "AGENTS.md",
   "verification": [
-    [
-      "npx",
-      "tsc",
-      "--noEmit"
-    ],
-    [
-      "npm",
-      "run",
-      "test:coverage"
-    ],
-    [
-      "uv",
-      "run",
-      "--no-project",
-      "--python",
-      "3.11",
-      "--with",
-      "coverage==7.17.0",
-      "python",
-      "-m",
-      "coverage",
-      "run",
-      "--branch",
-      "--data-file=coverage/.coverage.worker",
-      "--source=worker/local_synthesis",
-      "-m",
-      "unittest",
-      "discover",
-      "-s",
-      "worker/tests",
-      "-t",
-      "worker"
-    ],
-    [
-      "uv",
-      "run",
-      "--no-project",
-      "--python",
-      "3.11",
-      "--with",
-      "coverage==7.17.0",
-      "python",
-      "-m",
-      "coverage",
-      "json",
-      "--data-file=coverage/.coverage.worker",
-      "-o",
-      "coverage/worker.json"
-    ],
-    [
-      "uv",
-      "run",
-      "--no-project",
-      "--python",
-      "3.11",
-      "--with",
-      "coverage==7.17.0",
-      "python",
-      "-m",
-      "coverage",
-      "run",
-      "--branch",
-      "--data-file=coverage/.coverage.bakeoff",
-      "--source=experiments/tts-bakeoff/tts_bakeoff",
-      "-m",
-      "unittest",
-      "discover",
-      "-s",
-      "experiments/tts-bakeoff/tests"
-    ],
-    [
-      "uv",
-      "run",
-      "--no-project",
-      "--python",
-      "3.11",
-      "--with",
-      "coverage==7.17.0",
-      "python",
-      "-m",
-      "coverage",
-      "json",
-      "--data-file=coverage/.coverage.bakeoff",
-      "-o",
-      "coverage/bakeoff.json"
-    ]
+    ["npx", "tsc", "--noEmit"],
+    ["npm", "run", "test:coverage"],
+    ["npm", "run", "test:local-synthesis-worker"]
   ],
   "coverage": [
     {
       "format": "istanbul",
       "report": "coverage/coverage-final.json",
       "source_directory": "src"
-    },
-    {
-      "format": "coveragepy",
-      "report": "coverage/worker.json",
-      "source_directory": "worker/local_synthesis"
-    },
-    {
-      "format": "coveragepy",
-      "report": "coverage/bakeoff.json",
-      "source_directory": "experiments/tts-bakeoff/tts_bakeoff"
     }
   ]
 }
