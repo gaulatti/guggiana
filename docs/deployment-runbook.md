@@ -14,6 +14,7 @@ locked toolchain and run the same offline gates as CI before synthesizing:
 npm ci
 uv lock --check --project experiments/tts-bakeoff
 npm run test:tts-bakeoff
+npm run test:local-synthesis-worker
 npm run test:coverage -- --runInBand
 npm run build
 npx cdk --version
@@ -75,9 +76,11 @@ For a representative lazy-rendition cycle, capture only bounded evidence:
    second synthesis execution.
 4. Record bounded hit/miss, workflow outcome, dependency failure, and cost
    metrics; do not record content IDs, URLs, text, or signed artifacts.
-5. Confirm the provider used by the execution. The current landed workflow is
-   Polly-only; local-provider proof is not possible until the separately tracked
-   worker and production cutover are merged and approved.
+5. Confirm the provider used by the execution. The deployed workflow is
+   Polly-only: the provider-selection seam and worker client in
+   `src/domain/speech` are not called by any Lambda and the stack defines no
+   selection setting, so local-provider proof is not possible until the
+   separately tracked wiring and production cutover are merged and approved.
 
 ## Rollback
 
