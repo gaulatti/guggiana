@@ -70,6 +70,9 @@ specifics.
    operational gates pass (`gaulatti/guggiana#21`); keep Polly IAM/callbacks
    until that has soaked.
 
+`toLocalWorkerRequests`, the provider-selection seam and the worker client (step 4/5 groundwork, uncalled) and the open connectivity
+decision are described in `docs/local-provider-cutover.md`.
+
 Steps 3–5 are separately tracked; each is its own PR. The default-provider
 cutover remains gated on human quality, exact-locale, license, and operational
 approval.
