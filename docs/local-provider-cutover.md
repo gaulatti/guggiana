@@ -40,6 +40,15 @@ audio in the existing S3 bucket; the only durable worker state is the worker's
 own private SQLite queue, which the caller never reads directly. Whether a
 worker belongs in Guggiana at all is still the owner's decision (below).
 
+- `wav-assembly.ts` (`assembleWavParts`): concatenates the ordered mono PCM16
+  WAV artifacts of one article (a normal article is several worker jobs) into a
+  single WAV, so the one MP3 encode happens after assembly. It accepts only the
+  worker's canonical 44-byte-header files at one sample rate, enforces a caller
+  supplied output bound, and fails with a controlled code (`no_parts`,
+  `invalid_wav`, `unsupported_format`, `sample_rate_mismatch`,
+  `output_too_large`) instead of resampling or repairing. It does not encode MP3
+  (the encoder placement below is still undecided) and nothing calls it.
+
 Tests assert that the synthesized stack is unchanged (Polly only, no selection
 setting) so merging this activates nothing.
 
@@ -61,8 +70,9 @@ state machine a durable queue for retries and for the explicit rollback switch.
 1. Introduce a provider-selection seam in `lib/workflow/index.ts` defaulting to
    Polly, behind explicit configuration (needs the owner's approval because it
    is a new configuration surface).
-2. Assemble returned PCM/WAV chunks and encode MP3 once in `merge_files`
-   (requires an encoder in the Lambda image or layer).
+2. Call `assembleWavParts` on the returned WAV chunks and encode MP3 once in
+   `merge_files` (the assembly is landed; the encoder in the Lambda image or
+   layer is not).
 3. Dual-run a bounded fixture sample and record cost, latency and resource use.
 4. Flip the default only after all five locales and the long-form fixtures pass
    human quality, license and operational review. Rollback is flipping the
