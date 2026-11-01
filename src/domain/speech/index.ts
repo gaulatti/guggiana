@@ -7,3 +7,4 @@ export * from './fake-provider';
 export * from './worker-request';
 export * from './provider-selection';
 export * from './worker-client';
+export * from './wav-assembly';
