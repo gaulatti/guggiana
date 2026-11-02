@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "base_branch": "main",
+  "readme": "README.md",
+  "repository_policy": "AGENTS.md",
+  "verification": [
+    ["npx", "tsc", "--noEmit"],
+    ["npm", "run", "test:coverage"],
+    ["npm", "run", "test:local-synthesis-worker"]
+  ],
+  "coverage": [
+    {
+      "format": "istanbul",
+      "report": "coverage/coverage-final.json",
+      "source_directory": "src"
+    }
+  ]
+}

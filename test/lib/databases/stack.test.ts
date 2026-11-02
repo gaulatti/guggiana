@@ -29,3 +29,10 @@ test('Databases created', () => {
     );
   });
 });
+
+test('Synthesized stack stays Polly-only and carries no provider-selection setting', () => {
+  const template = Template.fromStack(new GuggianaStack(new App(), 'MyTestStack'));
+  const json = JSON.stringify(template.toJSON());
+  expect(json).toContain('polly:startSpeechSynthesisTask');
+  expect(json).not.toMatch(/GUGGIANA_SPEECH|piper|chatterbox|\/v1\/jobs/i);
+});
