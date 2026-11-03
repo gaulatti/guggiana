@@ -1,18 +1,15 @@
 import type { Config } from '@jest/types';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { jest: declared } = require('./package.json');
+
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   collectCoverage: true,
   collectCoverageFrom: ['**/{src,lib}/**/*.{ts,js}', '!**/*.d.ts'],
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
-  },
+  // The minimum coverage is declared in package.json (`jest.coverageThreshold`).
+  coverageThreshold: declared.coverageThreshold,
 };
 
 export default config;
