@@ -4,6 +4,8 @@ This package is an optional, provider-neutral, asynchronous speech worker. It
 is not connected to Guggiana's deployed Step Functions/Polly workflow and it
 does not choose a replacement provider. Every request must name an adapter that
 the operator explicitly enabled; there is no default and no Polly fallback.
+Polly remains Guggiana's production provider and the local-provider cutover is
+cancelled, so this worker is retained as inactive groundwork.
 
 The committed adapters cover the two landed bake-off candidates:
 

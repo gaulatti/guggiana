@@ -4,6 +4,14 @@ Guggiana is an environment-agnostic CDK stack named `GuggianaStack`. The AWS
 CLI profile and Region active when CDK runs therefore select the deployment
 target. Never infer that target from a previous operator's machine.
 
+Polly is Guggiana's production speech provider and the local-provider cutover
+is cancelled (see `docs/local-provider-cutover.md`). No local-provider,
+voice-selection, or non-Polly verification step is part of deployment. This
+runbook describes how to deploy when a deployment is warranted; it does not
+establish that one is. Before deploying, confirm read-only the intended AWS
+account and Region, whether `GuggianaStack` already exists there, and the actual
+consumer or concrete objective the deployment serves.
+
 ## Preflight
 
 Start from a clean checkout of the reviewed commit. Record the complete commit
@@ -76,11 +84,10 @@ For a representative lazy-rendition cycle, capture only bounded evidence:
    second synthesis execution.
 4. Record bounded hit/miss, workflow outcome, dependency failure, and cost
    metrics; do not record content IDs, URLs, text, or signed artifacts.
-5. Confirm the provider used by the execution. The deployed workflow is
-   Polly-only: the provider-selection seam and worker client in
-   `src/domain/speech` are not called by any Lambda and the stack defines no
-   selection setting, so local-provider proof is not possible until the
-   separately tracked wiring and production cutover are merged and approved.
+5. Confirm the execution used Polly. The deployed workflow is Polly-only: the
+   provider-selection seam and worker client in `src/domain/speech` are
+   inactive groundwork that no Lambda calls, and the stack defines no selection
+   setting, so there is no other provider to verify.
 
 ## Rollback
 
