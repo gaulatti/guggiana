@@ -1,9 +1,10 @@
 # Provider-neutral speech-synthesis contract
 
 `src/domain/speech/` defines Guggiana's speech domain independently of AWS
-Polly. It is **not wired into the deployed Step Functions workflow.** It exists
-so a local engine can be evaluated and implemented against a stable shape, then
-adopted only after quality and operational gates pass.
+Polly. It is **not wired into the deployed Step Functions workflow**, which
+stays Polly-only; the owner decided not to adopt a local engine. It was written
+so a local engine could be evaluated against a stable shape and is retained as
+inactive groundwork.
 
 ## What the contract owns
 
@@ -55,9 +56,9 @@ specifics.
 
 ## Migration sequence
 
-1. **This change** — land the neutral contract, validation, and fake provider. No
-   runtime change. *(current)*
-2. **This change** — add an independently runnable, provider-neutral local
+1. Landed — the neutral contract, validation, and fake provider. No
+   runtime change.
+2. Landed — an independently runnable, provider-neutral local
    synthesis worker with pinned Piper and Chatterbox adapters, an injected fake
    engine, and an explicit provider on every request (`gaulatti/guggiana#20`).
    It is not wired to Step Functions and does not choose the production default.
@@ -65,14 +66,13 @@ specifics.
    `pre_polly` / `polly_wait` / `polly_listener` behaviour, with no state-machine
    change.
 4. Introduce a provider-selection seam in `lib/workflow/index.ts` that still
-   defaults to Polly.
-5. Switch the default synthesis path to the local provider once quality and
-   operational gates pass (`gaulatti/guggiana#21`); keep Polly IAM/callbacks
-   until that has soaked.
+   defaults to Polly. *(Cancelled: only the uncalled TypeScript seam exists.)*
+5. Switch the default synthesis path to the local provider. *(Cancelled: the
+   owner decided on 2026-11-06 to stay on Polly; `gaulatti/guggiana#21` was
+   closed as not planned.)*
 
-`toLocalWorkerRequests`, the provider-selection seam and the worker client (step 4/5 groundwork, uncalled) and the open connectivity
-decision are described in `docs/local-provider-cutover.md`.
-
-Steps 3–5 are separately tracked; each is its own PR. The default-provider
-cutover remains gated on human quality, exact-locale, license, and operational
-approval.
+Polly remains the production provider. `toLocalWorkerRequests`, the
+provider-selection seam, the worker client and `assembleWavParts` are inactive
+groundwork retained in `src/domain/speech`; no Lambda calls them. They are
+described in `docs/local-provider-cutover.md`. Step 3 (a Polly adapter) is not implemented
+here; no provider cutover is planned.
